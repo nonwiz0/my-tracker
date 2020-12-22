@@ -10,3 +10,7 @@ Latest update on Dec 22, 2020
 - Enable Dark Mode (Not configure the theme properly yet)
 - Functionality of Start Timer, Stop Timer, Reset,
 - Working on save functionality
+
+## Credits
+- [Canva](https://www.canva.com/) for the favicon
+- [Undraw](https://undraw.co) for the amazing illustration
