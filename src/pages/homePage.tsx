@@ -3,7 +3,6 @@ import {
   IonButton,
   IonCard,
   IonCardContent,
-  IonCardHeader,
   IonCol,
   IonContent,
   IonHeader,
@@ -20,21 +19,17 @@ import {
 } from "@ionic/react";
 import dayjs from "dayjs";
 import { play, stop } from "ionicons/icons";
+import ClockTime from "../components/TimeCard";
+import { Plugins } from "@capacitor/core";
+import { useHistory } from "react-router";
+import formatTime from "../components/FormatTime";
 
-const ClockTime: React.FC = () => {
-  const [date, setDate] = useState(new Date());
-  const RefreshClock = () => {
-    setDate(new Date());
-  };
-  setInterval(RefreshClock, 1000);
-  return (
-    <div>
-      <h2>{date.toLocaleTimeString()}</h2>
-    </div>
-  );
-};
+const { Storage } = Plugins;
+// JSON "set" example
 
 const HomePage: React.FC = () => {
+  const [enableStop, setEnableStop] = useState(false);
+  // Timer status
   const [timerStatus, setTimerStatus] = useState({
     timeIn: "",
     timeOut: "",
@@ -43,10 +38,29 @@ const HomePage: React.FC = () => {
     stop: false,
     totalTime: 0,
   });
+  const history = useHistory();
+
+  // Timer detail about tasks
   const [taskDetail, setTaskDetail] = useState({
     category: "",
     description: "",
   });
+
+  // To save locally
+  const setObj = async () => {
+    await Storage.set({
+      key: `${dayjs().format("DD-HH-mm-ss")}`,
+      value: JSON.stringify({
+        id: `${dayjs().format("DD-HH-mm-ss")}`,
+        category: taskDetail.category,
+        description: taskDetail.description,
+        timeIn: timerStatus.timeIn,
+        timeOut: timerStatus.timeOut,
+        totalTime: timerStatus.totalTime,
+      }),
+    });
+  };
+
   const timerControl = ({
     start,
     stop,
@@ -62,11 +76,11 @@ const HomePage: React.FC = () => {
       const startCount = dayjs(timerStatus.timeIn);
       const temp = dayjs();
       const timeDiff = temp.diff(startCount, "second");
-
+      setEnableStop(!enableStop);
       setTimerStatus({
         start: false,
         timeIn: timerStatus.timeIn,
-        timeOut: timerStatus.timeOut,
+        timeOut: temp.toString(),
         pause: timerStatus.pause,
         stop: true,
         totalTime: timeDiff,
@@ -79,6 +93,7 @@ const HomePage: React.FC = () => {
       console.log("Time in already pressed once!");
     } else if (start) {
       const temp = dayjs();
+      setEnableStop(!enableStop);
       setTimerStatus({
         start: true,
         timeIn: temp.toString(),
@@ -90,23 +105,35 @@ const HomePage: React.FC = () => {
       console.log("Timer starts!");
       return 0;
     }
-    if (pause) {
-      console.log("Timer pauses!");
-    }
-    // if (timerStatus.stop) {
-    //   console.log("Time out already pressed once!");
-    // }
   };
+
+  // When user trigger save
   const handleSave = () => {
     console.log("time status", timerStatus);
     console.log("Task detail:", taskDetail);
+    setObj();
+    history.go(0);
   };
   if (timerStatus.stop) {
     console.log("Total Time:", timerStatus.totalTime, " sec");
   }
+
+  // WHen user click reset
+  const handleReset = () => {
+    setTimerStatus({
+      timeIn: "",
+      timeOut: "",
+      pause: false,
+      start: false,
+      stop: false,
+      totalTime: 0,
+    });
+    history.go(0);
+  };
   return (
     <IonPage>
-      <IonHeader collapse="condense">
+      {" "}
+      <IonHeader>
         <IonToolbar>
           <IonTitle>
             <div className="ion-text-center">Home Page </div>{" "}
@@ -118,7 +145,7 @@ const HomePage: React.FC = () => {
           <div className="ion-text-center ion-margin-top ion-padding-top">
             <h2>
               {timerStatus.stop ? (
-                timerStatus.totalTime + " Sec"
+                formatTime(timerStatus.totalTime)
               ) : (
                 <ClockTime />
               )}
@@ -166,7 +193,6 @@ const HomePage: React.FC = () => {
           </IonCardContent>
         </IonCard>
         <IonCard>
-          <IonCardHeader></IonCardHeader>
           <IonCardContent>
             {!timerStatus.stop ? (
               <div>
@@ -175,6 +201,7 @@ const HomePage: React.FC = () => {
                     <IonButton
                       fill="clear"
                       onClick={() => timerControl({ start: true })}
+                      disabled={enableStop}
                     >
                       <IonIcon icon={play}></IonIcon>
                     </IonButton>
@@ -183,6 +210,7 @@ const HomePage: React.FC = () => {
                     <IonButton
                       onClick={() => timerControl({ stop: true })}
                       fill="clear"
+                      disabled={!enableStop}
                     >
                       <IonIcon icon={stop} />
                     </IonButton>
@@ -194,18 +222,10 @@ const HomePage: React.FC = () => {
                 <IonRow>
                   <IonCol>
                     <IonButton
-                      onClick={() =>
-                        setTimerStatus({
-                          timeIn: "",
-                          timeOut: "",
-                          pause: false,
-                          start: false,
-                          stop: false,
-                          totalTime: 0,
-                        })
-                      }
+                      onClick={handleReset}
                       color="danger"
                       fill="clear"
+                      disabled={false}
                     >
                       Reset
                     </IonButton>

@@ -10,7 +10,11 @@ Latest update on Dec 22, 2020
 - Enable Dark Mode (Not configure the theme properly yet)
 - Functionality of Start Timer, Stop Timer, Reset,
 - Working on save functionality
+- Enable/Disable state for Play, Stop 
+- Save on local storage 
 
 ## Credits
 - [Canva](https://www.canva.com/) for the favicon
 - [Undraw](https://undraw.co) for the amazing illustration
+- [Capacitor](capacitorjs.com) for the native f(x)
+- [Ionic](ionicframework.com) for the front end framework

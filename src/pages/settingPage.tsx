@@ -21,7 +21,7 @@ const SettingPage: React.FC = () => {
       <IonHeader collapse="condense">
         <IonToolbar>
           <IonTitle>
-            <div className="ion-text-center">Setting Page </div>{" "}
+            <div className="ion-text-center"> Setting Page </div>{" "}
           </IonTitle>
         </IonToolbar>
       </IonHeader>
@@ -42,6 +42,9 @@ const SettingPage: React.FC = () => {
               name="darkMode"
               onIonChange={toggleDarkModeHandler}
             />
+          </IonItem>
+          <IonItem>
+            <div>Copyright by MFA @ 2020</div>
           </IonItem>
         </IonCard>
       </IonContent>
