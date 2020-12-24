@@ -5,7 +5,7 @@ export const formatTime = (inputNumber: number) => {
     const min = (inputNumber /= 60);
     const sec = (inputNumber %= 60);
 
-    return min.toFixed(0) + " min, " + sec + " sec";
+    return min.toFixed(0) + " min, " + sec.toFixed(0) + " sec";
   } else {
     return inputNumber + " sec";
   }
