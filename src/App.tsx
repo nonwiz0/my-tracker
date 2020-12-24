@@ -28,6 +28,7 @@ const App: React.FC = () => {
             <Route path="/setting" component={SettingPage} />
             <Route
               path="/"
+              
               render={() => <Redirect to="/home" />}
               exact={true}
             />

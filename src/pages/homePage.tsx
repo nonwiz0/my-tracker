@@ -22,11 +22,13 @@ import { play, stop } from "ionicons/icons";
 import ClockTime from "../components/TimeCard";
 import { Plugins } from "@capacitor/core";
 import { formatTime } from "../components/FormatDateTime";
+import { useHistory } from "react-router";
 
 const { Storage } = Plugins;
 // JSON "set" example
 
 const HomePage: React.FC = () => {
+  const history = useHistory();
   const [handleClick, setHandleChange] = useState(0);
   const [enableStop, setEnableStop] = useState(false);
   // Timer status
@@ -108,6 +110,7 @@ const HomePage: React.FC = () => {
     setObj();
     setHandleChange(handleClick + 1);
     handleReset();
+    history.go(0);
   };
   if (timerStatus.stop) {
     console.log("Total Time:", timerStatus.totalTime, " sec");
