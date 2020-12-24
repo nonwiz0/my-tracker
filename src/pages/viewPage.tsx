@@ -5,22 +5,24 @@ import {
   IonCol,
   IonContent,
   IonHeader,
+  IonIcon,
   IonItem,
-  IonList,
+  IonItemOption,
+  IonItemOptions,
+  IonItemSliding,
   IonPage,
-  IonRow,
+  IonText,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { getItem, getKeys } from "../components/StorageComponent";
 import { Plugins } from "@capacitor/core";
 import { TrackDetail } from "../model";
 import formatTime from "../components/FormatTime";
+import { pencil, trash } from "ionicons/icons";
 
 const { Storage } = Plugins;
 const ViewPage: React.FC = () => {
   const [trackList, setTrackList] = useState<TrackDetail[]>([]);
-  const [listKey, setListKey] = useState<string[]>([]);
   const getKeys = async () => {
     const { keys } = await Storage.keys();
     const temp = [];
@@ -36,7 +38,6 @@ const ViewPage: React.FC = () => {
   useEffect(() => {
     getKeys();
 
-    console.log(listKey);
     return () => {
       console.log("unmount");
     };
@@ -56,50 +57,52 @@ const ViewPage: React.FC = () => {
         <IonCard color="primary">
           <IonCardContent>
             <div className="ion-text-center">
-              <h2>Task Category:</h2>
-              <p>Site-Project: 1, Assignment: 2, Learning: 3</p>
+              <h2>Tasks List:</h2>
+              {/* <p>Site-Project: 1, Assignment: 2, Learning: 3</p> */}
+              <p>You can slide the item to edit or delete</p>
             </div>
           </IonCardContent>
         </IonCard>
-        <IonCard>
-          <IonCardContent>
-            <IonList>
-              <IonRow>
-                <IonCol>Tasks</IonCol>
-                <IonCol>
-                  <div className="ion-text-end">Time Spent</div>{" "}
-                </IonCol>
-              </IonRow>
-              {trackList.map((entry) => (
-                <div key={entry.id}>
-                  {/* <IonCol size="1">
-                      <h4>{entry.description}</h4>
-                    </IonCol>
-                    <IonCol size={"1"}>
-                      {" "}
-                      {formatTime(parseInt(entry.totalTime))}
-                    </IonCol> */}
-                  <IonItem>
-                    <h4>
-                      {entry.description}{" "}
-                      <div className="ion-text-end">
-                        {formatTime(parseInt(entry.totalTime))}
-                      </div>
-                    </h4>
-                  </IonItem>
-                </div>
-              ))}
-            </IonList>
-          </IonCardContent>
-        </IonCard>
-        {/* {trackList.map((entry) => (
-          <div key={entry.id}>
-            <div>{entry.category}</div>
-            <div>{entry.description}</div>
-            <div>Total Time Spent: {formatTime(parseInt(entry.totalTime))}</div>
-            <br />
-          </div>
-        ))} */}
+
+        <IonItem lines="none">
+          <IonCol>
+            <IonText color="primary">Tasks</IonText>
+          </IonCol>
+          <IonCol>
+            <div className="ion-text-end">
+              {" "}
+              <IonText color="primary"> Time Spent</IonText>
+            </div>
+          </IonCol>
+        </IonItem>
+        {trackList.map((entry) => (
+          <IonItemSliding>
+            <IonItem key={entry.id}>
+              <IonCol>
+                {" "}
+                <div className="ion-text-start">{entry.description}</div>{" "}
+              </IonCol>{" "}
+              <IonCol>
+                <div className="ion-text-end">
+                  {formatTime(parseInt(entry.totalTime))}
+                </div>{" "}
+              </IonCol>
+            </IonItem>
+            <IonItemOptions side="start">
+              <IonItemOption color="secondary">
+                <IonText>{entry.category}</IonText>
+              </IonItemOption>
+            </IonItemOptions>
+            <IonItemOptions side="end">
+              <IonItemOption color="" slot="icon-only">
+                <IonIcon icon={pencil}> </IonIcon>
+              </IonItemOption>
+              <IonItemOption color="danger">
+                <IonIcon icon={trash}> </IonIcon>
+              </IonItemOption>
+            </IonItemOptions>
+          </IonItemSliding>
+        ))}
       </IonContent>
     </IonPage>
   );

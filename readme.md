@@ -12,6 +12,7 @@ Latest update on Dec 22, 2020
 - Working on save functionality
 - Enable/Disable state for Play, Stop 
 - Save on local storage 
+- Update view page to see list of items with sliding
 
 ## Credits
 - [Canva](https://www.canva.com/) for the favicon

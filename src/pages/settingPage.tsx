@@ -18,7 +18,7 @@ const toggleDarkModeHandler = () => {
 const SettingPage: React.FC = () => {
   return (
     <IonPage>
-      <IonHeader collapse="condense">
+      <IonHeader>
         <IonToolbar>
           <IonTitle>
             <div className="ion-text-center"> Setting Page </div>{" "}
