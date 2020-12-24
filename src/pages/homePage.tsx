@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   IonButton,
   IonCard,
@@ -7,7 +7,6 @@ import {
   IonContent,
   IonHeader,
   IonIcon,
-  IonInput,
   IonItem,
   IonLabel,
   IonPage,
@@ -22,24 +21,22 @@ import dayjs from "dayjs";
 import { play, stop } from "ionicons/icons";
 import ClockTime from "../components/TimeCard";
 import { Plugins } from "@capacitor/core";
-import { useHistory } from "react-router";
 import { formatTime } from "../components/FormatDateTime";
 
 const { Storage } = Plugins;
 // JSON "set" example
 
 const HomePage: React.FC = () => {
+  const [handleClick, setHandleChange] = useState(0);
   const [enableStop, setEnableStop] = useState(false);
   // Timer status
   const [timerStatus, setTimerStatus] = useState({
     timeIn: "",
     timeOut: "",
-    pause: false,
     start: false,
     stop: false,
     totalTime: 0,
   });
-  const history = useHistory();
 
   // Timer detail about tasks
   const [taskDetail, setTaskDetail] = useState({
@@ -66,7 +63,6 @@ const HomePage: React.FC = () => {
   const timerControl = ({
     start,
     stop,
-    pause,
   }: {
     start?: boolean;
     stop?: boolean;
@@ -83,7 +79,6 @@ const HomePage: React.FC = () => {
         start: false,
         timeIn: timerStatus.timeIn,
         timeOut: temp.toString(),
-        pause: timerStatus.pause,
         stop: true,
         totalTime: timeDiff,
       });
@@ -100,7 +95,6 @@ const HomePage: React.FC = () => {
         start: true,
         timeIn: temp.toString(),
         timeOut: timerStatus.timeOut,
-        pause: timerStatus.pause,
         stop: false,
         totalTime: 0,
       });
@@ -111,26 +105,28 @@ const HomePage: React.FC = () => {
 
   // When user trigger save
   const handleSave = () => {
-    console.log("time status", timerStatus);
-    console.log("Task detail:", taskDetail);
+    setHandleChange(handleClick + 1);
     setObj();
-    history.go(0);
+    handleReset();
   };
   if (timerStatus.stop) {
     console.log("Total Time:", timerStatus.totalTime, " sec");
   }
 
+  useEffect(() => {
+    setTaskDetail({ category: "", description: "" });
+  }, [handleClick]);
+
   // WHen user click reset
   const handleReset = () => {
+    setHandleChange(handleClick + 1);
     setTimerStatus({
       timeIn: "",
       timeOut: "",
-      pause: false,
       start: false,
       stop: false,
       totalTime: 0,
     });
-    history.go(0);
   };
   return (
     <IonPage>

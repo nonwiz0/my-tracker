@@ -5,7 +5,7 @@ export const formatTime = (inputNumber: number) => {
     const min = (inputNumber /= 60);
     const sec = (inputNumber %= 60);
 
-    return inputNumber.toFixed(0) + " min, " + sec + " sec";
+    return min.toFixed(0) + " min, " + sec + " sec";
   } else {
     return inputNumber + " sec";
   }
@@ -24,10 +24,4 @@ export const formatDate = (inputDate: string) => {
 export const formatDetailTime = (inputDate: string) => {
   const date = dayjs(inputDate);
   return date.format("h:mm A");
-};
-
-export const findDiff = (dateIn: string, dateOut: string) => {
-  const date01 = dayjs(dateIn);
-  const date02 = dayjs(dateOut);
-  const diff = date02.diff(date01);
 };

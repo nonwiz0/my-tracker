@@ -36,6 +36,7 @@ const EntryPage: React.FC = () => {
   };
   useEffect(() => {
     getTrackDetail();
+    return () => {};
   }, [id]);
 
   return (

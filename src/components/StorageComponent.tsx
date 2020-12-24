@@ -11,6 +11,7 @@ export const getKeys = async () => {
 
 export const getItem = async (keyName: string) => {
   const { value } = await Storage.get({ key: `${keyName}` });
+  return value;
 };
 
 export const getObject = async (keyName: string) => {

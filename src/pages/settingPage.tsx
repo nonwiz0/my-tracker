@@ -12,7 +12,6 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { resetAll } from "../components/StorageComponent";
-import { Redirect, useHistory } from "react-router";
 import "../theme/components.css";
 
 const toggleDarkModeHandler = () => {
@@ -20,7 +19,6 @@ const toggleDarkModeHandler = () => {
 };
 
 const SettingPage: React.FC = () => {
-  const history = useHistory();
   const handleReset = () => {
     resetAll();
   };
@@ -50,6 +48,11 @@ const SettingPage: React.FC = () => {
               name="darkMode"
               onIonChange={toggleDarkModeHandler}
             />
+          </IonItem>
+          <IonItem>
+            <div>
+              <a href="/credits">Credits & Others</a>
+            </div>
           </IonItem>
           <IonItem>
             <div>MFA © 2020</div>

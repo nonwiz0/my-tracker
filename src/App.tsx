@@ -15,6 +15,7 @@ import HomePage from "./pages/homePage";
 import ViewPage from "./pages/viewPage";
 import SettingPage from "./pages/settingPage";
 import EntryPage from "./pages/entryPage";
+import CreditPage from "./pages/creditPage";
 
 const App: React.FC = () => (
   <IonApp>
@@ -28,6 +29,7 @@ const App: React.FC = () => (
           <Route exact path="/view/entries/:id">
             <EntryPage />
           </Route>
+          <Route path="/credits" component={CreditPage} exact={true} />
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
           <IonTabButton tab="tab1" href="/home">
