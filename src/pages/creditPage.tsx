@@ -6,17 +6,13 @@ import {
   IonCardHeader,
   IonContent,
   IonHeader,
-  IonItem,
-  IonLabel,
   IonPage,
   IonSlide,
   IonSlides,
   IonText,
   IonTitle,
-  IonToggle,
   IonToolbar,
 } from "@ionic/react";
-import { resetAll } from "../components/StorageComponent";
 import "../theme/components.css";
 import { useHistory } from "react-router";
 
@@ -38,7 +34,11 @@ const CreditPage: React.FC = () => {
               <IonCardHeader>
                 {" "}
                 <div>
-                  <img src="/assets/svg/specialThanks.svg" height="100 px" />
+                  <img
+                    src="/assets/svg/specialThanks.svg"
+                    alt="thanks illustration"
+                    height="100 px"
+                  />
                 </div>{" "}
                 Special Thanks{" "}
               </IonCardHeader>
@@ -59,7 +59,11 @@ const CreditPage: React.FC = () => {
               <IonCardHeader>
                 {" "}
                 <div>
-                  <img src="/assets/svg/personalData.svg" height="100 px" />
+                  <img
+                    src="/assets/svg/personalData.svg"
+                    alt="no data taken"
+                    height="100 px"
+                  />
                 </div>{" "}
                 Privacy Policy{" "}
               </IonCardHeader>
@@ -79,7 +83,11 @@ const CreditPage: React.FC = () => {
               <IonCardHeader>
                 {" "}
                 <div>
-                  <img src="/assets/svg/react.svg" height="100 px" />
+                  <img
+                    src="/assets/svg/react.svg"
+                    alt="react "
+                    height="100 px"
+                  />
                 </div>{" "}
                 React{" "}
               </IonCardHeader>
@@ -100,7 +108,11 @@ const CreditPage: React.FC = () => {
               <IonCardHeader>
                 {" "}
                 <div>
-                  <img src="/assets/svg/openSource.svg" height="100 px" />
+                  <img
+                    src="/assets/svg/openSource.svg"
+                    alt=" about open source"
+                    height="100 px"
+                  />
                 </div>{" "}
                 Open Source{" "}
               </IonCardHeader>
@@ -119,7 +131,11 @@ const CreditPage: React.FC = () => {
               <IonCardHeader>
                 {" "}
                 <div>
-                  <img src="/assets/svg/contactUs.svg" height="100 px" />
+                  <img
+                    src="/assets/svg/contactUs.svg"
+                    alt="contact me"
+                    height="100 px"
+                  />
                 </div>{" "}
                 Contact me{" "}
               </IonCardHeader>

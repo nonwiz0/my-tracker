@@ -22,11 +22,9 @@ import { TrackDetail } from "../model";
 import { open, trash } from "ionicons/icons";
 import { removeItem } from "../components/StorageComponent";
 import { formatTime } from "../components/FormatDateTime";
-import { useHistory } from "react-router";
 const { Storage } = Plugins;
 
 const ViewPage: React.FC = () => {
-  const history = useHistory();
   const [showNoData, setShowNoData] = useState(false);
   const [stateChange, setStateChange] = useState(0);
   const [trackList, setTrackList] = useState<TrackDetail[]>([]);
