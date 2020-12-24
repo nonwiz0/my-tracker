@@ -5,6 +5,7 @@ export interface TrackDetail {
     timeIn: string,
     timeOut: string,
     totalTime: string,
+    date: string,
 }
 
 export const toEntry = (doc: { id: any; data: () => any }) => {

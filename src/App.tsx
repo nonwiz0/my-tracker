@@ -14,6 +14,7 @@ import { home, listCircle, settings } from "ionicons/icons";
 import HomePage from "./pages/homePage";
 import ViewPage from "./pages/viewPage";
 import SettingPage from "./pages/settingPage";
+import EntryPage from "./pages/entryPage";
 
 const App: React.FC = () => (
   <IonApp>
@@ -24,6 +25,9 @@ const App: React.FC = () => (
           <Route path="/view" component={ViewPage} exact={true} />
           <Route path="/setting" component={SettingPage} />
           <Route path="/" render={() => <Redirect to="/home" />} exact={true} />
+          <Route exact path="/view/entries/:id">
+            <EntryPage />
+          </Route>
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
           <IonTabButton tab="tab1" href="/home">

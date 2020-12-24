@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   IonCard,
   IonCardContent,
+  IonChip,
   IonCol,
   IonContent,
   IonHeader,
@@ -10,18 +11,41 @@ import {
   IonItemOption,
   IonItemOptions,
   IonItemSliding,
+  IonLabel,
   IonPage,
+  IonRefresher,
+  IonRefresherContent,
   IonText,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
 import { Plugins } from "@capacitor/core";
 import { TrackDetail } from "../model";
-import formatTime from "../components/FormatTime";
-import { pencil, trash } from "ionicons/icons";
-
+import {
+  arrowBack,
+  arrowUp,
+  chevronDownCircleOutline,
+  open,
+  pencil,
+  push,
+  trash,
+} from "ionicons/icons";
+import { removeItem } from "../components/StorageComponent";
+import { useHistory } from "react-router";
+import { formatTime } from "../components/FormatDateTime";
+import { RefresherEventDetail } from "@ionic/core";
 const { Storage } = Plugins;
+
+const doRefresh = (event: CustomEvent<RefresherEventDetail>) => {
+  setTimeout(() => {
+    console.log("Async operation has ended");
+    event.detail.complete();
+  }, 2000);
+};
+
 const ViewPage: React.FC = () => {
+  const [showNoData, setShowNoData] = useState(false);
+  const history = useHistory();
   const [trackList, setTrackList] = useState<TrackDetail[]>([]);
   const getKeys = async () => {
     const { keys } = await Storage.keys();
@@ -31,6 +55,9 @@ const ViewPage: React.FC = () => {
       const objValue = JSON.parse(ret.value!);
       console.log("Keys are", objValue);
       temp.push(objValue);
+    }
+    if (temp.length < 1) {
+      setShowNoData(true);
     }
     setTrackList(temp);
     console.log(temp);
@@ -43,7 +70,25 @@ const ViewPage: React.FC = () => {
     };
   }, []);
 
-  console.log("List from Track", trackList);
+  const sortedTrack = trackList.sort((a, b) => {
+    if (a.date < b.date) {
+      return 1;
+    } else {
+      return -1;
+    }
+  });
+
+  const handleDelete = (keyName: string) => {
+    removeItem(keyName);
+  };
+
+  const categoryList: string[] = [];
+  for (const i of sortedTrack) {
+    if (!categoryList.includes(i.category)) {
+      categoryList.push(i.category);
+    }
+  }
+  console.log("Checking Loop: ", categoryList);
   return (
     <IonPage>
       <IonHeader>
@@ -58,9 +103,16 @@ const ViewPage: React.FC = () => {
           <IonCardContent>
             <div className="ion-text-center">
               <h2>Tasks List:</h2>
-              {/* <p>Site-Project: 1, Assignment: 2, Learning: 3</p> */}
-              <p>You can slide the item to edit or delete</p>
             </div>
+
+            <p className="ion-text-center">
+              {categoryList.map((category) => (
+                <IonChip color="light">
+                  {" "}
+                  <IonLabel>{category}</IonLabel>{" "}
+                </IonChip>
+              ))}
+            </p>
           </IonCardContent>
         </IonCard>
 
@@ -75,12 +127,29 @@ const ViewPage: React.FC = () => {
             </div>
           </IonCol>
         </IonItem>
-        {trackList.map((entry) => (
+        {showNoData && (
+          <div className="ion-text-center ion-margin-top ion-padding-top">
+            {" "}
+            <img src="/assets/svg/view-noData.svg" height="150 px" />
+            <p>You haven't record any task yet!</p>
+          </div>
+        )}
+        <IonRefresher color="light" slot="fixed" onIonRefresh={doRefresh}>
+          <IonRefresherContent
+            pullingIcon={chevronDownCircleOutline}
+            pullingText="Pull to refresh"
+            refreshingSpinner="circles"
+            refreshingText="Refreshing..."
+          ></IonRefresherContent>
+        </IonRefresher>
+        {sortedTrack.map((entry) => (
           <IonItemSliding>
             <IonItem key={entry.id}>
               <IonCol>
                 {" "}
-                <div className="ion-text-start">{entry.description}</div>{" "}
+                <div className="ion-text-start">
+                  {entry.description.substr(0, 20)}
+                </div>{" "}
               </IonCol>{" "}
               <IonCol>
                 <div className="ion-text-end">
@@ -94,10 +163,17 @@ const ViewPage: React.FC = () => {
               </IonItemOption>
             </IonItemOptions>
             <IonItemOptions side="end">
-              <IonItemOption color="" slot="icon-only">
-                <IonIcon icon={pencil}> </IonIcon>
+              <IonItemOption
+                color=""
+                slot="icon-only"
+                routerLink={`/view/entries/${entry.id}`}
+              >
+                <IonIcon icon={open}> </IonIcon>
               </IonItemOption>
-              <IonItemOption color="danger">
+              <IonItemOption
+                color="danger"
+                onClick={() => handleDelete(entry.id)}
+              >
                 <IonIcon icon={trash}> </IonIcon>
               </IonItemOption>
             </IonItemOptions>

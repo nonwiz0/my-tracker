@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  IonButton,
   IonCard,
   IonContent,
   IonHeader,
@@ -10,12 +11,19 @@ import {
   IonToggle,
   IonToolbar,
 } from "@ionic/react";
+import { resetAll } from "../components/StorageComponent";
+import { Redirect, useHistory } from "react-router";
+import "../theme/components.css";
 
 const toggleDarkModeHandler = () => {
   document.body.classList.toggle("dark");
 };
 
 const SettingPage: React.FC = () => {
+  const history = useHistory();
+  const handleReset = () => {
+    resetAll();
+  };
   return (
     <IonPage>
       <IonHeader>
@@ -44,9 +52,18 @@ const SettingPage: React.FC = () => {
             />
           </IonItem>
           <IonItem>
-            <div>Copyright by MFA @ 2020</div>
+            <div>MFA © 2020</div>
           </IonItem>
         </IonCard>
+
+        <IonButton
+          color="danger"
+          routerLink="/"
+          expand="block"
+          onClick={handleReset}
+        >
+          RESET
+        </IonButton>
       </IonContent>
     </IonPage>
   );

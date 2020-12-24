@@ -14,6 +14,7 @@ import {
   IonRow,
   IonSelect,
   IonSelectOption,
+  IonTextarea,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
@@ -22,7 +23,7 @@ import { play, stop } from "ionicons/icons";
 import ClockTime from "../components/TimeCard";
 import { Plugins } from "@capacitor/core";
 import { useHistory } from "react-router";
-import formatTime from "../components/FormatTime";
+import { formatTime } from "../components/FormatDateTime";
 
 const { Storage } = Plugins;
 // JSON "set" example
@@ -57,6 +58,7 @@ const HomePage: React.FC = () => {
         timeIn: timerStatus.timeIn,
         timeOut: timerStatus.timeOut,
         totalTime: timerStatus.totalTime,
+        date: new Date(),
       }),
     });
   };
@@ -154,7 +156,7 @@ const HomePage: React.FC = () => {
           <IonCardContent>
             {timerStatus.start && (
               <div className="ion-text-center">
-                <IonInput
+                {/* <IonInput
                   value={taskDetail.description}
                   onIonChange={(e) =>
                     setTaskDetail({
@@ -163,7 +165,17 @@ const HomePage: React.FC = () => {
                     })
                   }
                   placeholder="I am working on ..."
-                ></IonInput>
+                ></IonInput> */}
+                <IonTextarea
+                  value={taskDetail.description}
+                  onIonChange={(e) =>
+                    setTaskDetail({
+                      description: e.detail.value!,
+                      category: taskDetail.category,
+                    })
+                  }
+                  placeholder="I'm working on ..."
+                ></IonTextarea>
               </div>
             )}
             {timerStatus.stop && (
@@ -179,13 +191,19 @@ const HomePage: React.FC = () => {
                       })
                     }
                   >
-                    <IonSelectOption value="side-project">
+                    <IonSelectOption value="Main Project">
+                      Main Project
+                    </IonSelectOption>
+                    <IonSelectOption value="Side Project">
                       Side Project
                     </IonSelectOption>
-                    <IonSelectOption value="assignment">
-                      Assignment
+                    <IonSelectOption value="Course Work">
+                      Course Work
                     </IonSelectOption>
-                    <IonSelectOption value="work">Work</IonSelectOption>
+                    <IonSelectOption value="Workplace">Working</IonSelectOption>
+                    <IonSelectOption value="Learning">Learning</IonSelectOption>
+
+                    <IonSelectOption value="Learning">Testing</IonSelectOption>
                   </IonSelect>
                 </IonItem>
               </div>

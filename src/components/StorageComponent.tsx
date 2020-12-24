@@ -18,3 +18,11 @@ export const getObject = async (keyName: string) => {
   const objValue = JSON.parse(ret.value!);
   console.log(objValue);
 };
+
+export const removeItem = async (keyName: string) => {
+  await Storage.remove({ key: keyName });
+};
+
+export const resetAll = async () => {
+  await Storage.clear();
+};
