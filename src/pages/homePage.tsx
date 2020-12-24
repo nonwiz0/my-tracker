@@ -105,8 +105,8 @@ const HomePage: React.FC = () => {
 
   // When user trigger save
   const handleSave = () => {
-    setHandleChange(handleClick + 1);
     setObj();
+    setHandleChange(handleClick + 1);
     handleReset();
   };
   if (timerStatus.stop) {
