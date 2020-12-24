@@ -31,13 +31,15 @@ const AppTabs: React.FC = () => {
           <Route path="/my/view" component={ViewPage} exact={true} />
           <Route path="/my/settings" component={SettingPage} />
 
-          <Route>
-            <HomePage />
-          </Route>
-          <Route exact path="/my/view/entries/:id">
+          <Route path="/my/view/entries/:id">
             <EntryPage />
           </Route>
         </Switch>
+        <Route
+          path="/"
+          render={() => <Redirect to="/my/home" />}
+          exact={true}
+        />
         <Route path="/my/credits" component={CreditPage} exact={true} />
       </IonRouterOutlet>
       <IonTabBar slot="bottom">

@@ -3,7 +3,7 @@ import { IonApp, IonLoading, IonProgressBar } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import AppTabs from "./AppTabs";
 import { AuthContext, useAuthInit } from "./auth";
-import { Route, Switch } from "react-router";
+import { Redirect, Route, Switch } from "react-router";
 import LoginPage from "./pages/loginPage";
 import PageNotFoundPage from "./pages/pageNotFoundPage";
 import { auth } from "./firebase";
@@ -14,7 +14,7 @@ const App: React.FC = () => {
   console.log("Logged in", auth);
 
   if (loading) {
-    return <IonLoading isOpen />;
+    return <div></div>;
   }
   return (
     <IonApp>
@@ -30,10 +30,12 @@ const App: React.FC = () => {
             <Route path="/my">
               <AppTabs />
             </Route>
-            <Route>
-              <PageNotFoundPage />
-            </Route>
           </Switch>
+          <Route
+            path="/"
+            render={() => <Redirect to="/login" />}
+            exact={true}
+          />
         </IonReactRouter>
       </AuthContext.Provider>
     </IonApp>

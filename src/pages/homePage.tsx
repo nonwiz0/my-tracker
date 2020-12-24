@@ -23,11 +23,14 @@ import ClockTime from "../components/TimeCard";
 import { Plugins } from "@capacitor/core";
 import { formatTime } from "../components/FormatDateTime";
 import { useHistory } from "react-router";
+import { firestore } from "../firebase";
+import { useAuth } from "../auth";
 
 const { Storage } = Plugins;
 // JSON "set" example
 
 const HomePage: React.FC = () => {
+  const { userId } = useAuth();
   const history = useHistory();
   const [handleClick, setHandleChange] = useState(0);
   const [enableStop, setEnableStop] = useState(false);
@@ -60,6 +63,24 @@ const HomePage: React.FC = () => {
         date: new Date(),
       }),
     });
+  };
+
+  // To save on the cloud
+  const saveOnFS = async () => {
+    const entriesRef = firestore
+      .collection("users")
+      .doc(userId)
+      .collection("tasks");
+    const entryData = {
+      category: taskDetail.category,
+      description: taskDetail.description,
+      timeIn: timerStatus.timeIn,
+      timeOut: timerStatus.timeOut,
+      totalTime: timerStatus.totalTime,
+      date: new Date(),
+    };
+    const entryRef = await entriesRef.add(entryData);
+    history.go(0);
   };
 
   const timerControl = ({
@@ -108,6 +129,7 @@ const HomePage: React.FC = () => {
   // When user trigger save
   const handleSave = () => {
     setObj();
+    // saveOnFS();
     setHandleChange(handleClick + 1);
     handleReset();
     history.go(0);
@@ -131,6 +153,8 @@ const HomePage: React.FC = () => {
       totalTime: 0,
     });
   };
+
+  console.log("User ID", userId);
   return (
     <IonPage>
       {" "}

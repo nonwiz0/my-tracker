@@ -18,16 +18,24 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { Plugins } from "@capacitor/core";
-import { TrackDetail } from "../model";
+import { toEntry, TrackDetail } from "../model";
 import { open, trash } from "ionicons/icons";
 import { removeItem } from "../components/StorageComponent";
 import { formatTime } from "../components/FormatDateTime";
+import { firestore } from "../firebase";
+import { useAuth } from "../auth";
+import { Console } from "console";
 const { Storage } = Plugins;
 
 const ViewPage: React.FC = () => {
+  const { userId } = useAuth();
   const [showNoData, setShowNoData] = useState(false);
   const [stateChange, setStateChange] = useState(0);
   const [trackList, setTrackList] = useState<TrackDetail[]>([]);
+  const entriesRef = firestore
+    .collection("users")
+    .doc(userId)
+    .collection("tasks");
   if (stateChange === 0) {
     setStateChange(+1);
   }
@@ -45,12 +53,16 @@ const ViewPage: React.FC = () => {
     setTrackList(temp);
   };
 
+  const getListFromFS = () => {
+    return entriesRef.onSnapshot(({ docs }) => setTrackList(docs.map(toEntry)));
+  };
   useEffect(() => {
-    getKeys();
+    getListFromFS();
+    // getKeys();
     return () => {
       console.log("Getting the key again");
     };
-  }, [stateChange]);
+  }, [userId]);
 
   const sortedTrack = trackList.sort((a, b) => {
     if (a.date < b.date) {
@@ -60,9 +72,13 @@ const ViewPage: React.FC = () => {
     }
   });
 
-  const handleDelete = (keyName: string) => {
-    removeItem(keyName);
-    setStateChange(stateChange + 1);
+  const handleDelete = async (keyName: string) => {
+    const entryRef = entriesRef.doc(keyName);
+    await entryRef.delete().then(() => {
+      console.log("deleted");
+    });
+    // // removeItem(keyName);
+    // setStateChange(stateChange + 1);
   };
 
   const categoryList: string[] = [];
@@ -145,7 +161,7 @@ const ViewPage: React.FC = () => {
               <IonItemOption
                 color=""
                 slot="icon-only"
-                routerLink={`/view/entries/${entry.id}`}
+                routerLink={`/my/view/entries/${entry.id}`}
               >
                 <IonIcon icon={open}> </IonIcon>
               </IonItemOption>

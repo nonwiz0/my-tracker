@@ -15,9 +15,11 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { useRouteMatch } from "react-router";
-import { TrackDetail } from "../model";
+import { toEntry, TrackDetail } from "../model";
 import { Plugins } from "@capacitor/core";
 import { formatDate, formatDetailTime } from "../components/FormatDateTime";
+import { firestore } from "../firebase";
+import { useAuth } from "../auth";
 
 interface RouterParams {
   id: string;
@@ -25,19 +27,33 @@ interface RouterParams {
 
 const { Storage } = Plugins;
 const EntryPage: React.FC = () => {
+  const { userId } = useAuth();
+  console.log("You're eat entry page");
   const match = useRouteMatch<RouterParams>();
   const { id } = match.params;
   const [trackDetail, setTrackDetail] = useState<TrackDetail>();
 
+  const getTrackFS = () => {
+    const entryRef = firestore
+      .collection("users")
+      .doc(userId)
+      .collection("tasks")
+      .doc(id);
+    entryRef.get().then((doc) => {
+      setTrackDetail(toEntry(doc));
+    });
+  };
   const getTrackDetail = async () => {
     const ret = await Storage.get({ key: id });
     const objValue = JSON.parse(ret.value!);
     setTrackDetail(objValue);
   };
+
   useEffect(() => {
-    getTrackDetail();
+    // getTrackDetail();
+    getTrackFS();
     return () => {};
-  }, [id]);
+  }, [id, userId]);
 
   return (
     <IonPage>

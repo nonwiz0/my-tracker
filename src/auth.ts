@@ -3,7 +3,7 @@ import { auth as firebaseAuth } from './firebase';
 
 interface Auth {
     loggedIn: boolean;
-    userId?: string
+    userId?: string;
 }
 
 interface AuthInit {
@@ -13,16 +13,19 @@ interface AuthInit {
 
 export const AuthContext = React.createContext<Auth>({ loggedIn: false });
 
-export function useAuth() : Auth {
+export function useAuth(): Auth {
     return useContext(AuthContext);
 }
 
 export function useAuthInit() : AuthInit {
-    const [authInit, setAuthInit] = useState<AuthInit>({loading: true});
+    const [authState, setAuthInit] = useState<AuthInit>({loading: true});
     useEffect(() => {
-       return firebaseAuth.onAuthStateChanged((firebaseUser) => {
-            setAuthInit({loading: false, auth: {loggedIn: Boolean(firebaseUser)} });
+      return firebaseAuth.onAuthStateChanged((firebaseUser) => {
+            const auth = firebaseUser ?
+                {loggedIn: true, userId: firebaseUser.uid } :
+                {loggedIn: false};
+            setAuthInit({loading: false, auth});
       });
     }, []);
-    return authInit;
+    return authState;
 }
