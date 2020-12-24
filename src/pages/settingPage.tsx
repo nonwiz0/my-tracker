@@ -13,14 +13,15 @@ import {
 } from "@ionic/react";
 import { resetAll } from "../components/StorageComponent";
 import "../theme/components.css";
+import { auth } from "../firebase";
 
 const toggleDarkModeHandler = () => {
   document.body.classList.toggle("dark");
 };
 
 const SettingPage: React.FC = () => {
-  const handleReset = () => {
-    resetAll();
+  const handleLogout = () => {
+    auth.signOut();
   };
   return (
     <IonPage>
@@ -49,23 +50,22 @@ const SettingPage: React.FC = () => {
               onIonChange={toggleDarkModeHandler}
             />
           </IonItem>
+
+          <IonItem>MFA © 2020</IonItem>
           <IonItem>
             <div>
               <a href="/credits">Credits & Others</a>
             </div>
           </IonItem>
-          <IonItem>
-            <div>MFA © 2020</div>
-          </IonItem>
         </IonCard>
 
         <IonButton
           color="danger"
-          routerLink="/"
+          routerLink="/login"
           expand="block"
-          onClick={handleReset}
+          onClick={handleLogout}
         >
-          RESET
+          LOGOUT
         </IonButton>
       </IonContent>
     </IonPage>
