@@ -55,6 +55,7 @@ const EntryPage: React.FC = () => {
     return () => {};
   }, [id, userId]);
 
+  console.log(trackDetail);
   return (
     <IonPage>
       <IonHeader>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   IonCard,
   IonCardContent,
@@ -17,76 +17,54 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { Plugins } from "@capacitor/core";
 import { toEntry, TrackDetail } from "../model";
 import { open, trash } from "ionicons/icons";
-import { removeItem } from "../components/StorageComponent";
-import { formatTime } from "../components/FormatDateTime";
+import { formatString, formatTime } from "../components/FormatDateTime";
 import { firestore } from "../firebase";
 import { useAuth } from "../auth";
-import { Console } from "console";
-const { Storage } = Plugins;
 
 const ViewPage: React.FC = () => {
   const { userId } = useAuth();
   const [showNoData, setShowNoData] = useState(false);
-  const [stateChange, setStateChange] = useState(0);
   const [trackList, setTrackList] = useState<TrackDetail[]>([]);
+  const categoryList: string[] = [];
   const entriesRef = firestore
     .collection("users")
     .doc(userId)
     .collection("tasks");
-  if (stateChange === 0) {
-    setStateChange(+1);
-  }
-  const getKeys = async () => {
-    const { keys } = await Storage.keys();
-    const temp = [];
-    for (const i of keys) {
-      const ret = await Storage.get({ key: i });
-      const objValue = JSON.parse(ret.value!);
-      temp.push(objValue);
-    }
-    if (temp.length < 1) {
-      setShowNoData(true);
-    }
-    setTrackList(temp);
-  };
 
-  const getListFromFS = () => {
-    return entriesRef.onSnapshot(({ docs }) => setTrackList(docs.map(toEntry)));
+  const getListFromFS = async () => {
+    await entriesRef
+      .orderBy("date", "desc")
+      .onSnapshot(({ docs }) => setTrackList(docs.map(toEntry)));
   };
   useEffect(() => {
     getListFromFS();
-    // getKeys();
-    return () => {
-      console.log("Getting the key again");
-    };
-  }, [userId]);
 
-  const sortedTrack = trackList.sort((a, b) => {
-    if (a.date < b.date) {
-      return 1;
-    } else {
-      return -1;
-    }
-  });
+    return () => {};
+  }, []);
 
   const handleDelete = async (keyName: string) => {
     const entryRef = entriesRef.doc(keyName);
     await entryRef.delete().then(() => {
       console.log("deleted");
     });
-    // // removeItem(keyName);
-    // setStateChange(stateChange + 1);
   };
 
-  const categoryList: string[] = [];
-  for (const i of sortedTrack) {
+  for (const i of trackList) {
     if (!categoryList.includes(i.category)) {
       categoryList.push(i.category);
     }
   }
+
+  useEffect(() => {
+    if (!categoryList.length) {
+      setShowNoData(true);
+    } else {
+      setShowNoData(false);
+    }
+  }, [categoryList]);
+
   return (
     <IonPage>
       <IonHeader>
@@ -106,7 +84,6 @@ const ViewPage: React.FC = () => {
             <p className="ion-text-center">
               {categoryList.map((category) => (
                 <IonChip color="light" key={category}>
-                  {" "}
                   <IonLabel>{category}</IonLabel>{" "}
                 </IonChip>
               ))}
@@ -137,13 +114,13 @@ const ViewPage: React.FC = () => {
           </div>
         )}
 
-        {sortedTrack.map((entry) => (
+        {trackList.map((entry) => (
           <IonItemSliding key={entry.id}>
             <IonItem>
               <IonCol>
                 {" "}
                 <div className="ion-text-start">
-                  {entry.description.substr(0, 20)}
+                  {formatString(entry.description)}
                 </div>{" "}
               </IonCol>{" "}
               <IonCol>

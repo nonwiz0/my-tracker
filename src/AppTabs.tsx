@@ -3,6 +3,8 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import {
   IonIcon,
   IonLabel,
+  IonLoading,
+  IonProgressBar,
   IonRouterOutlet,
   IonTabBar,
   IonTabButton,
@@ -18,7 +20,6 @@ import { useAuth } from "./auth";
 
 const AppTabs: React.FC = () => {
   const { loggedIn } = useAuth();
-
   if (!loggedIn) {
     return <Redirect to="/login" />;
   }

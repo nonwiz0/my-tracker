@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  IonAlert,
   IonButton,
   IonCard,
   IonCardContent,
@@ -8,7 +9,6 @@ import {
   IonHeader,
   IonInput,
   IonItem,
-  IonLabel,
   IonLoading,
   IonPage,
   IonTitle,
@@ -22,7 +22,7 @@ const RegisterPage: React.FC = () => {
   const { loggedIn } = useAuth();
   const [userDetail, setUserDetail] = useState({ email: "", password: "" });
   const [status, setStatus] = useState({ loading: false, error: false });
-
+  const [errorMessage, setErr] = useState("");
   const handleRegister = async () => {
     try {
       setStatus({ loading: true, error: false });
@@ -31,6 +31,7 @@ const RegisterPage: React.FC = () => {
         userDetail.password
       );
     } catch (error) {
+      setErr(error.message!);
       setStatus({ loading: false, error: true });
       console.log(error);
     }
@@ -45,7 +46,20 @@ const RegisterPage: React.FC = () => {
   }
   return (
     <IonPage>
-      {" "}
+      {status.loading && (
+        <div>
+          <IonAlert isOpen={status.loading} message={`Loading ...`} />
+        </div>
+      )}
+      {status.error && (
+        <IonAlert
+          isOpen={status.error}
+          onDidDismiss={() => setStatus({ error: false, loading: false })}
+          header={"Login Error"}
+          message={`${errorMessage}`}
+          buttons={["OK"]}
+        />
+      )}{" "}
       <IonHeader>
         <IonToolbar>
           <IonTitle>
@@ -58,7 +72,7 @@ const RegisterPage: React.FC = () => {
           <IonCardHeader>
             <div className="ion-text-center">
               <img
-                src="/assets/svg/login-authentication.svg"
+                src="/assets/svg/openSource.svg"
                 alt="login illustration"
                 height="150 px"
               />

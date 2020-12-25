@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
 
-const ClockTime: React.FC = (props) => {
+const ClockTime = () => {
   const [date, setDate] = useState(new Date());
   const RefreshClock = () => {
     setDate(new Date());

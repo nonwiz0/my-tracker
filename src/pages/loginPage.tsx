@@ -1,16 +1,22 @@
 import React, { useState } from "react";
 import {
+  IonAlert,
   IonButton,
   IonCard,
   IonCardContent,
   IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
+  IonChip,
   IonContent,
   IonHeader,
   IonInput,
   IonItem,
-  IonLabel,
   IonLoading,
   IonPage,
+  IonProgressBar,
+  IonSlide,
+  IonSlides,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
@@ -22,7 +28,7 @@ const LoginPage: React.FC = () => {
   const { loggedIn } = useAuth();
   const [userDetail, setUserDetail] = useState({ email: "", password: "" });
   const [status, setStatus] = useState({ loading: false, error: false });
-
+  const [errorMessage, setErr] = useState("");
   const handleLogin = async () => {
     try {
       setStatus({ loading: true, error: false });
@@ -31,6 +37,7 @@ const LoginPage: React.FC = () => {
         userDetail.password
       );
     } catch (error) {
+      setErr(error.message!);
       setStatus({ loading: false, error: true });
       console.log(error);
     }
@@ -42,7 +49,20 @@ const LoginPage: React.FC = () => {
 
   return (
     <IonPage>
-      {" "}
+      {status.loading && (
+        <div>
+          <IonAlert isOpen={status.loading} message={`Loading ...`} />
+        </div>
+      )}
+      {status.error && (
+        <IonAlert
+          isOpen={status.error}
+          onDidDismiss={() => setStatus({ error: false, loading: false })}
+          header={"Login Error"}
+          message={`${errorMessage}`}
+          buttons={["OK"]}
+        />
+      )}
       <IonHeader>
         <IonToolbar>
           <IonTitle>
@@ -51,8 +71,8 @@ const LoginPage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding" fullscreen>
-        <IonCard color="primary">
-          <IonCardHeader>
+        <IonCard>
+          <IonCardHeader color="primary">
             <div className="ion-text-center">
               <img
                 src="/assets/svg/login-authentication.svg"
@@ -62,6 +82,7 @@ const LoginPage: React.FC = () => {
             </div>
           </IonCardHeader>
         </IonCard>
+
         <IonCard>
           <IonCardContent>
             <IonItem>

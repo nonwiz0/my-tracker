@@ -11,9 +11,9 @@ import {
   IonToggle,
   IonToolbar,
 } from "@ionic/react";
-import { resetAll } from "../components/StorageComponent";
 import "../theme/components.css";
 import { auth } from "../firebase";
+import { Redirect } from "react-router";
 
 const toggleDarkModeHandler = () => {
   document.body.classList.toggle("dark");
@@ -22,6 +22,7 @@ const toggleDarkModeHandler = () => {
 const SettingPage: React.FC = () => {
   const handleLogout = () => {
     auth.signOut();
+    return <Redirect to="/login" />;
   };
   return (
     <IonPage>
@@ -54,7 +55,7 @@ const SettingPage: React.FC = () => {
           <IonItem>MFA © 2020</IonItem>
           <IonItem>
             <div>
-              <a href="/credits">Credits & Others</a>
+              <a href="/my/credits">Credits & Others</a>
             </div>
           </IonItem>
         </IonCard>
