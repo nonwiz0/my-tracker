@@ -38,7 +38,7 @@ const RegisterPage: React.FC = () => {
   };
 
   if (loggedIn) {
-    return <Redirect to="/my" />;
+    return <Redirect to="/my/home" />;
   }
 
   if (status.loading) {

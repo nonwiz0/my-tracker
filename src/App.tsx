@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { IonApp, IonLoading, IonProgressBar } from "@ionic/react";
+import { IonApp, IonLoading } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import AppTabs from "./AppTabs";
 import { AuthContext, useAuthInit } from "./auth";
@@ -21,7 +21,7 @@ const App: React.FC = () => {
     description: "",
   });
   if (loading) {
-    return <IonProgressBar type="indeterminate"></IonProgressBar>;
+    return <IonLoading isOpen={loading} />;
   }
   return (
     <IonApp>

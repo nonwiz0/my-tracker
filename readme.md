@@ -4,7 +4,7 @@ My Tracker is an open source app that allow users to track their own productivit
 is their time spending.
 
 ## Update list:
-Latest update on Dec 24, 2020
+Latest update on Dec 25, 2020
 - Worked on basic navigation between tabs
 - Divided Tabs into Home, View, Setting
 - Enable Dark Mode (Not configure the theme properly yet)
@@ -18,6 +18,7 @@ Latest update on Dec 24, 2020
 - Add useEffect to refresh the state
 - remove use history
 - Update credits and other info page
+- Update firestore base version
 
 ## Credits
 - [Canva](https://www.canva.com/) for the favicon
