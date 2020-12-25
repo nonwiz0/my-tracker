@@ -1,4 +1,4 @@
-## Getting started
+## Getting started for Online Edition
 
 My Tracker is an open source app that allow users to track their own productivity. My Tracker allows users to record what are the tasks to measure how effective
 is their time spending.
