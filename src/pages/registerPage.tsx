@@ -55,7 +55,7 @@ const RegisterPage: React.FC = () => {
         <IonAlert
           isOpen={status.error}
           onDidDismiss={() => setStatus({ error: false, loading: false })}
-          header={"Login Error"}
+          header={"Registration failed"}
           message={`${errorMessage}`}
           buttons={["OK"]}
         />

@@ -58,7 +58,7 @@ const LoginPage: React.FC = () => {
         <IonAlert
           isOpen={status.error}
           onDidDismiss={() => setStatus({ error: false, loading: false })}
-          header={"Login Error"}
+          header={"Login failed"}
           message={`${errorMessage}`}
           buttons={["OK"]}
         />
