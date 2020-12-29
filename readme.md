@@ -7,6 +7,7 @@ is their time spending.
 Latest update on Dec 29, 2020
 - Add PWA supported
 - Fix mins and sec functionality to hr and min
+- Re position the open to the left instead
 
 ## Credits
 - [Canva](https://www.canva.com/) for the favicon

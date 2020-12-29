@@ -96,6 +96,7 @@ const ViewPage: React.FC = () => {
             color="light"
             expand="block"
             className="ion-margin-start ion-margin-end"
+            disabled={true}
           >
             * Try to slide the record left or right
           </IonButton>
@@ -139,11 +140,6 @@ const ViewPage: React.FC = () => {
               </IonCol>
             </IonItem>
             <IonItemOptions side="start">
-              <IonItemOption color="secondary">
-                <IonText>{entry.category}</IonText>
-              </IonItemOption>
-            </IonItemOptions>
-            <IonItemOptions side="end">
               <IonItemOption
                 color=""
                 slot="icon-only"
@@ -151,6 +147,16 @@ const ViewPage: React.FC = () => {
               >
                 <IonIcon icon={open}> </IonIcon>
               </IonItemOption>
+              <IonItemOption
+                color="light"
+                routerLink={`/my/view/entries/${entry.id}`}
+              >
+                <IonText>
+                  <IonText>{entry.category}</IonText>
+                </IonText>
+              </IonItemOption>
+            </IonItemOptions>
+            <IonItemOptions side="end">
               <IonItemOption
                 color="danger"
                 onClick={() => handleDelete(entry.id)}
