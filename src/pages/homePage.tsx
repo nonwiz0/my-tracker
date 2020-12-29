@@ -92,6 +92,7 @@ const HomePage: React.FC = () => {
 
   const handleSave = () => {
     saveOnFS();
+    handleReset();
   };
   if (TrackStatus.stop) {
   }

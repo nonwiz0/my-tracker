@@ -92,7 +92,11 @@ const ViewPage: React.FC = () => {
           </IonCardContent>
         </IonCard>
         <div className="ion-text-center ion-margin-bottom">
-          <IonButton color="light" expand="block">
+          <IonButton
+            color="light"
+            expand="block"
+            className="ion-margin-start ion-margin-end"
+          >
             * Try to slide the record left or right
           </IonButton>
         </div>
