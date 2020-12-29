@@ -3,8 +3,6 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import {
   IonIcon,
   IonLabel,
-  IonLoading,
-  IonProgressBar,
   IonRouterOutlet,
   IonTabBar,
   IonTabButton,

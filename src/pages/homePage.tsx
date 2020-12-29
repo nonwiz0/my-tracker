@@ -139,7 +139,7 @@ const HomePage: React.FC = () => {
                       description: e.detail.value!,
                     })
                   }
-                  placeholder="I'm working on ..."
+                  placeholder="Right now, I ..."
                 ></IonTextarea>
               </div>
             )}
@@ -156,19 +156,25 @@ const HomePage: React.FC = () => {
                       })
                     }
                   >
+                    <IonSelectOption value="Contact Trace">
+                      Contact Trace
+                    </IonSelectOption>
                     <IonSelectOption value="Main Project">
                       Main Project
+                    </IonSelectOption>
+
+                    <IonSelectOption value="Personal Time">
+                      Personal time
                     </IonSelectOption>
                     <IonSelectOption value="Side Project">
                       Side Project
                     </IonSelectOption>
+
+                    <IonSelectOption value="Workplace">Working</IonSelectOption>
+                    <IonSelectOption value="Learning">Learning</IonSelectOption>
                     <IonSelectOption value="Course Work">
                       Course Work
                     </IonSelectOption>
-                    <IonSelectOption value="Workplace">Working</IonSelectOption>
-                    <IonSelectOption value="Learning">Learning</IonSelectOption>
-
-                    <IonSelectOption value="Learning">Testing</IonSelectOption>
                   </IonSelect>
                 </IonItem>
               </div>

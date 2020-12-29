@@ -1,5 +1,6 @@
 {
   "name": "my-tracker",
   "integrations": {},
-  "type": "react"
+  "type": "react",
+  "id": "addbde0b"
 }

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  IonButton,
   IonCard,
   IonCardContent,
   IonChip,
@@ -90,7 +91,11 @@ const ViewPage: React.FC = () => {
             </p>
           </IonCardContent>
         </IonCard>
-
+        <div className="ion-text-center ion-margin-bottom">
+          <IonButton color="light" expand="block">
+            * Try to slide the record left or right
+          </IonButton>
+        </div>
         <IonItem lines="none">
           <IonCol>
             <IonText color="primary">Tasks</IonText>

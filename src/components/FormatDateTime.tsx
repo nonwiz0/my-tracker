@@ -2,10 +2,11 @@ import dayjs from "dayjs";
 
 export const formatTime = (inputNumber: number) => {
   if (inputNumber >= 60) {
-    const min = (inputNumber /= 60);
-    const sec = (inputNumber %= 60);
+    const hour = Math.floor(inputNumber / 3600);
+    let time = inputNumber - hour * 3600;
+    const min = time / 60;
 
-    return min.toFixed(0) + " min, " + sec.toFixed(0) + " sec";
+    return hour.toFixed(0) + " hr, " + min.toFixed(0) + " min";
   } else {
     return inputNumber + " sec";
   }
