@@ -8,7 +8,6 @@ Latest update on Dec 29, 2020
 - Add PWA supported
 - Fix mins and sec functionality to hr and min
 
-
 ## Credits
 - [Canva](https://www.canva.com/) for the favicon
 - [Undraw](https://undraw.co) for the amazing illustration
