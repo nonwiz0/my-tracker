@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   IonButton,
   IonCard,
@@ -15,6 +15,7 @@ import {
   IonSelectOption,
   IonTextarea,
   IonTitle,
+  IonToast,
   IonToolbar,
 } from "@ionic/react";
 import dayjs from "dayjs";
@@ -27,6 +28,7 @@ import { TrackContext } from "../model";
 
 const HomePage: React.FC = () => {
   const { userId } = useAuth();
+  const [showDelToast, setDelToast] = useState(false);
 
   const { TrackStatus, setTrackStatus } = useContext(TrackContext);
 
@@ -93,9 +95,8 @@ const HomePage: React.FC = () => {
   const handleSave = () => {
     saveOnFS();
     handleReset();
+    setDelToast(true);
   };
-  if (TrackStatus.stop) {
-  }
 
   const handleReset = () => {
     setTrackStatus({
@@ -235,6 +236,12 @@ const HomePage: React.FC = () => {
             )}
           </IonCardContent>
         </IonCard>
+        <IonToast
+          isOpen={showDelToast}
+          onDidDismiss={() => setDelToast(false)}
+          message="You have save the record successfully"
+          duration={200}
+        />
       </IonContent>
     </IonPage>
   );

@@ -52,12 +52,17 @@ const SettingPage: React.FC = () => {
             />
           </IonItem>
 
-          <IonItem>MFA © 2020</IonItem>
           <IonItem>
             <div>
               <a href="/my/credits">Credits & Others</a>
             </div>
           </IonItem>
+          <IonItem>
+            <a href="mailto:bdchanbroset@gmail.com">
+              Found a bug or suggestion?
+            </a>
+          </IonItem>
+          <IonItem>MFA © 2020</IonItem>
         </IonCard>
 
         <IonButton

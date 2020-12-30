@@ -1,13 +1,13 @@
 {
-  "appId": "com.onTracker.app",
-  "appName": "on-tracker",
-  "bundledWebRuntime": true,
-  "npmClient": "npm",
-  "webDir": "www",
-  "plugins": {
-    "SplashScreen": {
-      "launchShowDuration": 0
-    }
-  },
-  "cordova": {}
+    "appId": "com.onTracker.app",
+    "appName": "on-tracker",
+    "bundledWebRuntime": true,
+    "npmClient": "npm",
+    "webDir": "build",
+    "plugins": {
+        "SplashScreen": {
+            "launchShowDuration": 0
+        }
+    },
+    "cordova": {}
 }

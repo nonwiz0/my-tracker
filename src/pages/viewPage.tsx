@@ -16,6 +16,7 @@ import {
   IonPage,
   IonText,
   IonTitle,
+  IonToast,
   IonToolbar,
 } from "@ionic/react";
 import { toEntry, TrackDetail } from "../model";
@@ -27,6 +28,7 @@ import { useAuth } from "../auth";
 const ViewPage: React.FC = () => {
   const { userId } = useAuth();
   const [showNoData, setShowNoData] = useState(false);
+  const [showDelToast, setDelToast] = useState(false);
   const [trackList, setTrackList] = useState<TrackDetail[]>([]);
   const categoryList: string[] = [];
   const entriesRef = firestore
@@ -50,6 +52,7 @@ const ViewPage: React.FC = () => {
     await entryRef.delete().then(() => {
       console.log("deleted");
     });
+    setDelToast(true);
   };
 
   for (const i of trackList) {
@@ -95,10 +98,10 @@ const ViewPage: React.FC = () => {
           <IonButton
             color="light"
             expand="block"
-            className="ion-margin-start ion-margin-end"
+            className="ion-padding-start ion-padding-end"
             disabled={true}
           >
-            * Try to slide the record left or right
+            Try to slide the record left or right
           </IonButton>
         </div>
         <IonItem lines="none">
@@ -166,6 +169,12 @@ const ViewPage: React.FC = () => {
             </IonItemOptions>
           </IonItemSliding>
         ))}
+        <IonToast
+          isOpen={showDelToast}
+          onDidDismiss={() => setDelToast(false)}
+          message="You have deleted the record successfully"
+          duration={200}
+        />
       </IonContent>
     </IonPage>
   );
