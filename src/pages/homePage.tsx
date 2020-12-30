@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   IonButton,
   IonCard,
@@ -15,51 +15,42 @@ import {
   IonSelectOption,
   IonTextarea,
   IonTitle,
+  IonToast,
   IonToolbar,
 } from "@ionic/react";
 import dayjs from "dayjs";
 import { play, stop } from "ionicons/icons";
 import ClockTime from "../components/TimeCard";
-import { Plugins } from "@capacitor/core";
 import { formatTime } from "../components/FormatDateTime";
-import { useHistory } from "react-router";
-
-const { Storage } = Plugins;
-// JSON "set" example
+import { firestore } from "../firebase";
+import { useAuth } from "../auth";
+import { TrackContext } from "../model";
 
 const HomePage: React.FC = () => {
-  const history = useHistory();
-  const [handleClick, setHandleChange] = useState(0);
-  const [enableStop, setEnableStop] = useState(false);
-  // Timer status
-  const [timerStatus, setTimerStatus] = useState({
-    timeIn: "",
-    timeOut: "",
-    start: false,
-    stop: false,
-    totalTime: 0,
-  });
+  const { userId } = useAuth();
+  const [showDelToast, setDelToast] = useState(false);
 
-  // Timer detail about tasks
-  const [taskDetail, setTaskDetail] = useState({
-    category: "",
-    description: "",
-  });
+  const { TrackStatus, setTrackStatus } = useContext(TrackContext);
 
-  // To save locally
-  const setObj = async () => {
-    await Storage.set({
-      key: `${dayjs().format("DD-HH-mm-ss")}`,
-      value: JSON.stringify({
-        id: `${dayjs().format("DD-HH-mm-ss")}`,
-        category: taskDetail.category,
-        description: taskDetail.description,
-        timeIn: timerStatus.timeIn,
-        timeOut: timerStatus.timeOut,
-        totalTime: timerStatus.totalTime,
-        date: new Date(),
-      }),
-    });
+  // To save on the cloud
+  const saveOnFS = async () => {
+    const entriesRef = firestore
+      .collection("users")
+      .doc(userId)
+      .collection("tasks");
+    const entryData = {
+      category: TrackStatus.category,
+      description: TrackStatus.description,
+      timeIn: TrackStatus.timeIn,
+      timeOut: TrackStatus.timeOut,
+      totalTime: TrackStatus.totalTime,
+      date: `${new Date()}`,
+    };
+    const entryRef = await entriesRef.add(entryData);
+    handleReset();
+    return () => {
+      console.log(entryRef);
+    };
   };
 
   const timerControl = ({
@@ -70,60 +61,47 @@ const HomePage: React.FC = () => {
     stop?: boolean;
     pause?: boolean;
   }) => {
-    if (timerStatus.stop && stop) {
-      console.log("You already time out, please time in again!");
+    if (TrackStatus.stop && stop) {
     } else if (stop) {
-      const startCount = dayjs(timerStatus.timeIn);
+      const startCount = dayjs(TrackStatus.timeIn);
       const temp = dayjs();
       const timeDiff = temp.diff(startCount, "second");
-      setEnableStop(!enableStop);
-      setTimerStatus({
+
+      setTrackStatus({
+        ...TrackStatus,
         start: false,
-        timeIn: timerStatus.timeIn,
         timeOut: temp.toString(),
         stop: true,
         totalTime: timeDiff,
       });
-      console.log("Timer stop!");
       return 0;
     }
 
-    if (timerStatus.start && start) {
-      console.log("Time in already pressed once!");
+    if (TrackStatus.start && start) {
     } else if (start) {
       const temp = dayjs();
-      setEnableStop(!enableStop);
-      setTimerStatus({
+
+      setTrackStatus({
+        ...TrackStatus,
         start: true,
         timeIn: temp.toString(),
-        timeOut: timerStatus.timeOut,
         stop: false,
         totalTime: 0,
       });
-      console.log("Timer starts!");
       return 0;
     }
   };
 
-  // When user trigger save
   const handleSave = () => {
-    setObj();
-    setHandleChange(handleClick + 1);
+    saveOnFS();
     handleReset();
-    history.go(0);
+    setDelToast(true);
   };
-  if (timerStatus.stop) {
-    console.log("Total Time:", timerStatus.totalTime, " sec");
-  }
 
-  useEffect(() => {
-    setTaskDetail({ category: "", description: "" });
-  }, [handleClick]);
-
-  // WHen user click reset
   const handleReset = () => {
-    setHandleChange(handleClick + 1);
-    setTimerStatus({
+    setTrackStatus({
+      description: "",
+      category: "",
       timeIn: "",
       timeOut: "",
       start: false,
@@ -131,9 +109,9 @@ const HomePage: React.FC = () => {
       totalTime: 0,
     });
   };
+
   return (
     <IonPage>
-      {" "}
       <IonHeader>
         <IonToolbar>
           <IonTitle>
@@ -145,64 +123,60 @@ const HomePage: React.FC = () => {
         <IonCard color="primary">
           <div className="ion-text-center ion-margin-top ion-padding-top">
             <h2>
-              {timerStatus.stop ? (
-                formatTime(timerStatus.totalTime)
+              {TrackStatus.stop ? (
+                formatTime(TrackStatus.totalTime)
               ) : (
                 <ClockTime />
               )}
             </h2>
           </div>
           <IonCardContent>
-            {timerStatus.start && (
+            {TrackStatus.start && (
               <div className="ion-text-center">
-                {/* <IonInput
-                  value={taskDetail.description}
-                  onIonChange={(e) =>
-                    setTaskDetail({
-                      description: e.detail.value!,
-                      category: taskDetail.category,
-                    })
-                  }
-                  placeholder="I am working on ..."
-                ></IonInput> */}
                 <IonTextarea
-                  value={taskDetail.description}
+                  value={TrackStatus.description}
                   onIonChange={(e) =>
-                    setTaskDetail({
+                    setTrackStatus({
+                      ...TrackStatus,
                       description: e.detail.value!,
-                      category: taskDetail.category,
                     })
                   }
-                  placeholder="I'm working on ..."
+                  placeholder="Right now, I ..."
                 ></IonTextarea>
               </div>
             )}
-            {timerStatus.stop && (
+            {TrackStatus.stop && (
               <div>
                 <IonItem color="primary">
                   <IonLabel>Task: </IonLabel>
                   <IonSelect
-                    value={taskDetail.category}
+                    value={TrackStatus.category}
                     onIonChange={(e) =>
-                      setTaskDetail({
-                        description: taskDetail.description,
+                      setTrackStatus({
+                        ...TrackStatus,
                         category: e.detail.value!,
                       })
                     }
                   >
+                    <IonSelectOption value="Contact Trace">
+                      Contact Trace
+                    </IonSelectOption>
                     <IonSelectOption value="Main Project">
                       Main Project
+                    </IonSelectOption>
+
+                    <IonSelectOption value="Personal Time">
+                      Personal time
                     </IonSelectOption>
                     <IonSelectOption value="Side Project">
                       Side Project
                     </IonSelectOption>
+
+                    <IonSelectOption value="Workplace">Working</IonSelectOption>
+                    <IonSelectOption value="Learning">Learning</IonSelectOption>
                     <IonSelectOption value="Course Work">
                       Course Work
                     </IonSelectOption>
-                    <IonSelectOption value="Workplace">Working</IonSelectOption>
-                    <IonSelectOption value="Learning">Learning</IonSelectOption>
-
-                    <IonSelectOption value="Learning">Testing</IonSelectOption>
                   </IonSelect>
                 </IonItem>
               </div>
@@ -211,14 +185,14 @@ const HomePage: React.FC = () => {
         </IonCard>
         <IonCard>
           <IonCardContent>
-            {!timerStatus.stop ? (
+            {!TrackStatus.stop ? (
               <div>
                 <IonRow>
                   <IonCol>
                     <IonButton
                       fill="clear"
                       onClick={() => timerControl({ start: true })}
-                      disabled={enableStop}
+                      disabled={TrackStatus.start}
                     >
                       <IonIcon icon={play}></IonIcon>
                     </IonButton>
@@ -227,7 +201,7 @@ const HomePage: React.FC = () => {
                     <IonButton
                       onClick={() => timerControl({ stop: true })}
                       fill="clear"
-                      disabled={!enableStop}
+                      disabled={!TrackStatus.start}
                     >
                       <IonIcon icon={stop} />
                     </IonButton>
@@ -262,6 +236,12 @@ const HomePage: React.FC = () => {
             )}
           </IonCardContent>
         </IonCard>
+        <IonToast
+          isOpen={showDelToast}
+          onDidDismiss={() => setDelToast(false)}
+          message="You have save the record successfully"
+          duration={200}
+        />
       </IonContent>
     </IonPage>
   );

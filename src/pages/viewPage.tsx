@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  IonButton,
   IonCard,
   IonCardContent,
   IonChip,
@@ -15,62 +16,59 @@ import {
   IonPage,
   IonText,
   IonTitle,
+  IonToast,
   IonToolbar,
 } from "@ionic/react";
-import { Plugins } from "@capacitor/core";
-import { TrackDetail } from "../model";
+import { toEntry, TrackDetail } from "../model";
 import { open, trash } from "ionicons/icons";
-import { removeItem } from "../components/StorageComponent";
-import { formatTime } from "../components/FormatDateTime";
-const { Storage } = Plugins;
+import { formatString, formatTime } from "../components/FormatDateTime";
+import { firestore } from "../firebase";
+import { useAuth } from "../auth";
 
 const ViewPage: React.FC = () => {
+  const { userId } = useAuth();
   const [showNoData, setShowNoData] = useState(false);
-  const [stateChange, setStateChange] = useState(0);
+  const [showDelToast, setDelToast] = useState(false);
   const [trackList, setTrackList] = useState<TrackDetail[]>([]);
-  if (stateChange === 0) {
-    setStateChange(+1);
-  }
-  const getKeys = async () => {
-    const { keys } = await Storage.keys();
-    const temp = [];
-    for (const i of keys) {
-      const ret = await Storage.get({ key: i });
-      const objValue = JSON.parse(ret.value!);
-      temp.push(objValue);
-    }
-    if (temp.length < 1) {
-      setShowNoData(true);
-    }
-    setTrackList(temp);
-  };
-
-  useEffect(() => {
-    getKeys();
-    return () => {
-      console.log("Getting the key again");
-    };
-  }, [stateChange]);
-
-  const sortedTrack = trackList.sort((a, b) => {
-    if (a.date < b.date) {
-      return 1;
-    } else {
-      return -1;
-    }
-  });
-
-  const handleDelete = (keyName: string) => {
-    removeItem(keyName);
-    setStateChange(stateChange + 1);
-  };
-
   const categoryList: string[] = [];
-  for (const i of sortedTrack) {
+  const entriesRef = firestore
+    .collection("users")
+    .doc(userId)
+    .collection("tasks");
+
+  const getListFromFS = async () => {
+    await entriesRef
+      .orderBy("date", "desc")
+      .onSnapshot(({ docs }) => setTrackList(docs.map(toEntry)));
+  };
+  useEffect(() => {
+    getListFromFS();
+
+    return () => {};
+  }, []);
+
+  const handleDelete = async (keyName: string) => {
+    const entryRef = entriesRef.doc(keyName);
+    await entryRef.delete().then(() => {
+      console.log("deleted");
+    });
+    setDelToast(true);
+  };
+
+  for (const i of trackList) {
     if (!categoryList.includes(i.category)) {
       categoryList.push(i.category);
     }
   }
+
+  useEffect(() => {
+    if (!categoryList.length) {
+      setShowNoData(true);
+    } else {
+      setShowNoData(false);
+    }
+  }, [categoryList]);
+
   return (
     <IonPage>
       <IonHeader>
@@ -90,14 +88,22 @@ const ViewPage: React.FC = () => {
             <p className="ion-text-center">
               {categoryList.map((category) => (
                 <IonChip color="light" key={category}>
-                  {" "}
                   <IonLabel>{category}</IonLabel>{" "}
                 </IonChip>
               ))}
             </p>
           </IonCardContent>
         </IonCard>
-
+        <div className="ion-text-center ion-margin-bottom">
+          <IonButton
+            color="light"
+            expand="block"
+            className="ion-padding-start ion-padding-end"
+            disabled={true}
+          >
+            Try to slide the record left or right
+          </IonButton>
+        </div>
         <IonItem lines="none">
           <IonCol>
             <IonText color="primary">Tasks</IonText>
@@ -121,13 +127,13 @@ const ViewPage: React.FC = () => {
           </div>
         )}
 
-        {sortedTrack.map((entry) => (
+        {trackList.map((entry) => (
           <IonItemSliding key={entry.id}>
             <IonItem>
               <IonCol>
                 {" "}
                 <div className="ion-text-start">
-                  {entry.description.substr(0, 20)}
+                  {formatString(entry.description)}
                 </div>{" "}
               </IonCol>{" "}
               <IonCol>
@@ -137,18 +143,23 @@ const ViewPage: React.FC = () => {
               </IonCol>
             </IonItem>
             <IonItemOptions side="start">
-              <IonItemOption color="secondary">
-                <IonText>{entry.category}</IonText>
-              </IonItemOption>
-            </IonItemOptions>
-            <IonItemOptions side="end">
               <IonItemOption
                 color=""
                 slot="icon-only"
-                routerLink={`/view/entries/${entry.id}`}
+                routerLink={`/my/view/entries/${entry.id}`}
               >
                 <IonIcon icon={open}> </IonIcon>
               </IonItemOption>
+              <IonItemOption
+                color="light"
+                routerLink={`/my/view/entries/${entry.id}`}
+              >
+                <IonText>
+                  <IonText>{entry.category}</IonText>
+                </IonText>
+              </IonItemOption>
+            </IonItemOptions>
+            <IonItemOptions side="end">
               <IonItemOption
                 color="danger"
                 onClick={() => handleDelete(entry.id)}
@@ -158,6 +169,12 @@ const ViewPage: React.FC = () => {
             </IonItemOptions>
           </IonItemSliding>
         ))}
+        <IonToast
+          isOpen={showDelToast}
+          onDidDismiss={() => setDelToast(false)}
+          message="You have deleted the record successfully"
+          duration={200}
+        />
       </IonContent>
     </IonPage>
   );
