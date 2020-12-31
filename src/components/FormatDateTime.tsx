@@ -33,7 +33,7 @@ export const formatDetailTime = (inputDate: string) => {
 export const formatString = (inputString: string) => {
   const arrText = inputString.split(" ");
   let newText = "";
-  if (inputString.length <= 20) {
+  if (inputString.length <= 23) {
     newText = inputString;
   } else if (arrText.length >= 2) {
     for (let i = 0; i < 2; i++) {

@@ -38,7 +38,7 @@ const ViewPage: React.FC = () => {
 
   const getListFromFS = async () => {
     await entriesRef
-      .orderBy("date", "desc")
+      .orderBy("date", "asc")
       .onSnapshot(({ docs }) => setTrackList(docs.map(toEntry)));
   };
   useEffect(() => {

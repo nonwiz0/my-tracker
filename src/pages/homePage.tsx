@@ -28,7 +28,7 @@ import { TrackContext } from "../model";
 
 const HomePage: React.FC = () => {
   const { userId } = useAuth();
-  const [showDelToast, setDelToast] = useState(false);
+  const [showSaveToast, setSaveToast] = useState(false);
 
   const { TrackStatus, setTrackStatus } = useContext(TrackContext);
 
@@ -95,7 +95,7 @@ const HomePage: React.FC = () => {
   const handleSave = () => {
     saveOnFS();
     handleReset();
-    setDelToast(true);
+    setSaveToast(true);
   };
 
   const handleReset = () => {
@@ -237,8 +237,8 @@ const HomePage: React.FC = () => {
           </IonCardContent>
         </IonCard>
         <IonToast
-          isOpen={showDelToast}
-          onDidDismiss={() => setDelToast(false)}
+          isOpen={showSaveToast}
+          onDidDismiss={() => setSaveToast(false)}
           message="You have save the record successfully"
           duration={200}
         />
