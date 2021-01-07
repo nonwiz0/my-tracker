@@ -32,7 +32,6 @@ const HomePage: React.FC = () => {
   const [cateList, setCateList] = useState<CategoryDetail>();
   const entriesRef = firestore.collection("users").doc(userId);
 
-  let categoryList = cateList?.category;
   const { TrackStatus, setTrackStatus } = useContext(TrackContext);
 
   const getListFromFS = async () => {

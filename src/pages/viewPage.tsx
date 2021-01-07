@@ -41,6 +41,7 @@ const ViewPage: React.FC = () => {
   const getListFromFS = async () => {
     await entriesRef
       .orderBy("date", "desc")
+      .limit(10)
       .onSnapshot(({ docs }) => setTrackList(docs.map(toEntry)));
   };
   useEffect(() => {
@@ -71,7 +72,7 @@ const ViewPage: React.FC = () => {
   }, [categoryList]);
 
   const filterCategory = (cateName: string) => {
-    setTrackList(trackList.filter((rec) => rec.category == cateName));
+    setTrackList(trackList.filter((rec) => rec.category === cateName));
   };
 
   return (

@@ -16,7 +16,6 @@ import {
 } from "@ionic/react";
 import { useRouteMatch } from "react-router";
 import { toEntry, TrackDetail } from "../model";
-import { Plugins } from "@capacitor/core";
 import { formatDate, formatDetailTime } from "../components/FormatDateTime";
 import { firestore } from "../firebase";
 import { useAuth } from "../auth";
@@ -25,7 +24,6 @@ interface RouterParams {
   id: string;
 }
 
-const { Storage } = Plugins;
 const EntryPage: React.FC = () => {
   const { userId } = useAuth();
   console.log("You're eat entry page");
@@ -43,14 +41,8 @@ const EntryPage: React.FC = () => {
       setTrackDetail(toEntry(doc));
     });
   };
-  const getTrackDetail = async () => {
-    const ret = await Storage.get({ key: id });
-    const objValue = JSON.parse(ret.value!);
-    setTrackDetail(objValue);
-  };
 
   useEffect(() => {
-    // getTrackDetail();
     getTrackFS();
     return () => {};
   }, [id, userId]);

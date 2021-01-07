@@ -41,6 +41,7 @@ const RegisterPage: React.FC = () => {
         userDetail.email,
         userDetail.password
       );
+      console.log(credential);
     } catch (error) {
       setErr(error.message!);
       setStatus({ loading: false, error: true });

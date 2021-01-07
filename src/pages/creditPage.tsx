@@ -13,11 +13,9 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import "../theme/components.css";
-import { useHistory } from "react-router";
 import { turnOffModal } from "../model";
 
 const CreditPage: React.FC<turnOffModal> = ({ turnOffModal }) => {
-  const history = useHistory();
   return (
     <>
       <IonHeader>
