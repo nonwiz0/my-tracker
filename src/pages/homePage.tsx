@@ -44,7 +44,7 @@ const HomePage: React.FC = () => {
       timeIn: TrackStatus.timeIn,
       timeOut: TrackStatus.timeOut,
       totalTime: TrackStatus.totalTime,
-      date: `${new Date()}`,
+      date: `${dayjs()}`,
     };
     const entryRef = await entriesRef.add(entryData);
     handleReset();

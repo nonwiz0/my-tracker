@@ -35,8 +35,8 @@ export const formatString = (inputString: string) => {
   let newText = "";
   if (inputString.length <= 23) {
     newText = inputString;
-  } else if (arrText.length >= 2) {
-    for (let i = 0; i < 2; i++) {
+  } else if (arrText.length >= 4) {
+    for (let i = 0; i < 4; i++) {
       newText += arrText[i] + " ";
     }
   } else {
