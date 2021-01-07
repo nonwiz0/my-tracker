@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   IonButton,
   IonCard,
@@ -24,14 +24,26 @@ import ClockTime from "../components/TimeCard";
 import { formatTime } from "../components/FormatDateTime";
 import { firestore } from "../firebase";
 import { useAuth } from "../auth";
-import { TrackContext } from "../model";
+import { CategoryDetail, toEntry, TrackContext } from "../model";
 
 const HomePage: React.FC = () => {
   const { userId } = useAuth();
   const [showSaveToast, setSaveToast] = useState(false);
+  const [cateList, setCateList] = useState<CategoryDetail>();
+  const entriesRef = firestore.collection("users").doc(userId);
 
+  let categoryList = cateList?.category;
   const { TrackStatus, setTrackStatus } = useContext(TrackContext);
 
+  const getListFromFS = async () => {
+    await entriesRef.onSnapshot((doc) => {
+      setCateList(toEntry(doc));
+    });
+  };
+  useEffect(() => {
+    getListFromFS();
+    return () => {};
+  }, [userId]);
   // To save on the cloud
   const saveOnFS = async () => {
     const entriesRef = firestore
@@ -158,25 +170,11 @@ const HomePage: React.FC = () => {
                       })
                     }
                   >
-                    <IonSelectOption value="Contact Trace">
-                      Contact Trace
-                    </IonSelectOption>
-                    <IonSelectOption value="Main Project">
-                      Main Project
-                    </IonSelectOption>
-
-                    <IonSelectOption value="Personal Time">
-                      Personal time
-                    </IonSelectOption>
-                    <IonSelectOption value="Side Project">
-                      Side Project
-                    </IonSelectOption>
-
-                    <IonSelectOption value="Workplace">Working</IonSelectOption>
-                    <IonSelectOption value="Learning">Learning</IonSelectOption>
-                    <IonSelectOption value="Course Work">
-                      Course Work
-                    </IonSelectOption>
+                    {cateList?.category.map((cate) => (
+                      <IonSelectOption value={`${cate}`} key={`${cate}`}>
+                        {cate}
+                      </IonSelectOption>
+                    ))}
                   </IonSelect>
                 </IonItem>
               </div>
@@ -236,6 +234,7 @@ const HomePage: React.FC = () => {
             )}
           </IonCardContent>
         </IonCard>
+
         <IonToast
           isOpen={showSaveToast}
           onDidDismiss={() => setSaveToast(false)}

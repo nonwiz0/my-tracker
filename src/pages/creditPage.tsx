@@ -6,7 +6,6 @@ import {
   IonCardHeader,
   IonContent,
   IonHeader,
-  IonPage,
   IonSlide,
   IonSlides,
   IonText,
@@ -15,11 +14,12 @@ import {
 } from "@ionic/react";
 import "../theme/components.css";
 import { useHistory } from "react-router";
+import { turnOffModal } from "../model";
 
-const CreditPage: React.FC = () => {
+const CreditPage: React.FC<turnOffModal> = ({ turnOffModal }) => {
   const history = useHistory();
   return (
-    <IonPage>
+    <>
       <IonHeader>
         <IonToolbar>
           <IonTitle>
@@ -142,8 +142,13 @@ const CreditPage: React.FC = () => {
               <IonCardContent>
                 <IonText>
                   <div className="ion-text-center">
-                    <a href="mailto:bdchanbroset@gmail.com">Email me</a> <br />{" "}
-                    <a href="https://chanrose.vercel.app">My website</a>
+                    <a href="mailto:chanrose@protonmail.com">
+                      Email: chanrose@protonmail.com
+                    </a>{" "}
+                    <br />{" "}
+                    <a href="https://chanrose.vercel.app">
+                      Website: https://chanrose.vercel.app
+                    </a>
                     <br />
                   </div>
                 </IonText>
@@ -151,16 +156,11 @@ const CreditPage: React.FC = () => {
             </IonCard>
           </IonSlide>
         </IonSlides>
-        <IonButton
-          color="primary"
-          routerLink="/"
-          expand="block"
-          onClick={() => history.goBack()}
-        >
+        <IonButton color="primary" expand="block" onClick={turnOffModal}>
           Go Back
         </IonButton>
       </IonContent>
-    </IonPage>
+    </>
   );
 };
 

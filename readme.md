@@ -5,12 +5,11 @@ is their time spending.
 
 ## Update list:
 Latest update on Jan 07, 2021
-- Add PWA supported
-- Fix mins and sec functionality to hr and min
-- Re position the open to the left instead
-- Order the record by ascending
+- Update filtering at View Page
 - Fix ascending order
 - Display words on view page
+- Add / Remove Category
+- Convert Credit page to Modal instead
 
 ## Credits
 - [Canva](https://www.canva.com/) for the favicon

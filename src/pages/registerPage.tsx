@@ -16,13 +16,24 @@ import {
 } from "@ionic/react";
 import { useAuth } from "../auth";
 import { Redirect } from "react-router";
-import { auth } from "../firebase";
+import { auth, firestore } from "../firebase";
 
 const RegisterPage: React.FC = () => {
   const { loggedIn } = useAuth();
+  const { userId } = useAuth();
+
   const [userDetail, setUserDetail] = useState({ email: "", password: "" });
   const [status, setStatus] = useState({ loading: false, error: false });
   const [errorMessage, setErr] = useState("");
+  const defaultCate = [
+    "Contact Trace",
+    "Main Project",
+    "Assignment",
+    "Personal Time",
+    "Working",
+    "Learning",
+    "Others",
+  ];
   const handleRegister = async () => {
     try {
       setStatus({ loading: true, error: false });
@@ -37,7 +48,15 @@ const RegisterPage: React.FC = () => {
     }
   };
 
+  const setDefaultCate = async () => {
+    console.log("Users ", userId);
+    await firestore
+      .collection("users")
+      .doc(userId)
+      .set({ category: defaultCate });
+  };
   if (loggedIn) {
+    setDefaultCate();
     return <Redirect to="/my/home" />;
   }
 
