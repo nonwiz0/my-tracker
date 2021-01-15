@@ -91,7 +91,7 @@ const ViewPage: React.FC = () => {
               <h2>Tasks List:</h2>
             </div>
 
-            <p className="ion-text-center">
+            <div className="ion-text-center">
               <IonChip color="light" onClick={getListFromFS}>
                 <div className="ion-text-center">
                   <IonIcon icon={reload} />
@@ -115,7 +115,7 @@ const ViewPage: React.FC = () => {
                 </IonChip>
               </Link>
               <p>Click on the gear icon to add/remove category</p>
-            </p>
+            </div>
           </IonCardContent>
         </IonCard>
         <div className="ion-text-center ion-margin-bottom">

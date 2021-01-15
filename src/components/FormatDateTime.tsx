@@ -31,16 +31,7 @@ export const formatDetailTime = (inputDate: string) => {
 };
 
 export const formatString = (inputString: string) => {
-  const arrText = inputString.split(" ");
-  let newText = "";
-  if (inputString.length <= 23) {
-    newText = inputString;
-  } else if (arrText.length >= 4) {
-    for (let i = 0; i < 4; i++) {
-      newText += arrText[i] + " ";
-    }
-  } else {
-    newText = inputString;
-  }
-  return newText;
+  return inputString.length > 20
+    ? inputString.slice(0, 40) + "..."
+    : inputString;
 };

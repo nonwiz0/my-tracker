@@ -4,13 +4,8 @@ My Tracker is an open source app that allow users to track their own productivit
 is their time spending.
 
 ## Update list:
-Latest update on Jan 11, 2021
-- Update filtering at View Page
-- Fix ascending order
-- Display words on view page
-- Add / Remove Category
-- Convert Credit page to Modal instead
-- Update Date to ISOString
+Latest update on Jan 15, 2021
+- Update wrap text on view page using slice
 
 ## Credits
 - [Canva](https://www.canva.com/) for the favicon
