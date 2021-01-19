@@ -33,6 +33,8 @@ const ViewPage: React.FC = () => {
   const [trackList, setTrackList] = useState<TrackDetail[]>([]);
   const filterTrackList = trackList;
   const categoryList: string[] = [];
+  const totalTimeSpent: number[] = [];
+
   const entriesRef = firestore
     .collection("users")
     .doc(userId)
@@ -58,6 +60,7 @@ const ViewPage: React.FC = () => {
   };
 
   for (const i of trackList) {
+    totalTimeSpent.push(+i.totalTime);
     if (!categoryList.includes(i.category)) {
       categoryList.push(i.category);
     }
@@ -75,6 +78,7 @@ const ViewPage: React.FC = () => {
     setTrackList(trackList.filter((rec) => rec.category === cateName));
   };
 
+  let totalTime = totalTimeSpent.reduce((total, value) => total + value, 0);
   return (
     <IonPage>
       <IonHeader>
@@ -125,7 +129,7 @@ const ViewPage: React.FC = () => {
             className="ion-padding-start ion-padding-end"
             disabled={true}
           >
-            Slide Left / Right for more options
+            <IonText>Overall Spent: {formatTime(totalTime)}</IonText>
           </IonButton>
         </div>
         <IonItem lines="none">
@@ -193,6 +197,7 @@ const ViewPage: React.FC = () => {
             </IonItemOptions>
           </IonItemSliding>
         ))}
+        <div className="ion-text-end ion-margin-top"></div>
         <IonToast
           isOpen={showDelToast}
           onDidDismiss={() => setDelToast(false)}
