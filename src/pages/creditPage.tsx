@@ -119,7 +119,7 @@ const CreditPage: React.FC = () => {
               <IonCardContent>
                 <IonText>
                   <div className="ion-text-center">
-                    Get started with <br /> gh repo clone chanrose/vls
+                    Get started with <br /> gh repo clone chanrose/my-tracker
                     <br />
                   </div>
                 </IonText>
