@@ -20,17 +20,21 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { toEntry, TrackDetail } from "../model";
-import { open, trash } from "ionicons/icons";
+import { open, reload, settings, trash } from "ionicons/icons";
 import { formatString, formatTime } from "../components/FormatDateTime";
 import { firestore } from "../firebase";
 import { useAuth } from "../auth";
+import { Link } from "react-router-dom";
 
 const ViewPage: React.FC = () => {
   const { userId } = useAuth();
   const [showNoData, setShowNoData] = useState(false);
   const [showDelToast, setDelToast] = useState(false);
   const [trackList, setTrackList] = useState<TrackDetail[]>([]);
+  const filterTrackList = trackList;
   const categoryList: string[] = [];
+  const totalTimeSpent: number[] = [];
+
   const entriesRef = firestore
     .collection("users")
     .doc(userId)
@@ -39,11 +43,11 @@ const ViewPage: React.FC = () => {
   const getListFromFS = async () => {
     await entriesRef
       .orderBy("date", "desc")
+
       .onSnapshot(({ docs }) => setTrackList(docs.map(toEntry)));
   };
   useEffect(() => {
     getListFromFS();
-
     return () => {};
   }, []);
 
@@ -56,6 +60,7 @@ const ViewPage: React.FC = () => {
   };
 
   for (const i of trackList) {
+    totalTimeSpent.push(+i.totalTime);
     if (!categoryList.includes(i.category)) {
       categoryList.push(i.category);
     }
@@ -69,6 +74,11 @@ const ViewPage: React.FC = () => {
     }
   }, [categoryList]);
 
+  const filterCategory = (cateName: string) => {
+    setTrackList(trackList.filter((rec) => rec.category === cateName));
+  };
+
+  let totalTime = totalTimeSpent.reduce((total, value) => total + value, 0);
   return (
     <IonPage>
       <IonHeader>
@@ -85,13 +95,31 @@ const ViewPage: React.FC = () => {
               <h2>Tasks List:</h2>
             </div>
 
-            <p className="ion-text-center">
+            <div className="ion-text-center">
+              <IonChip color="light" onClick={getListFromFS}>
+                <div className="ion-text-center">
+                  <IonIcon icon={reload} />
+                </div>
+              </IonChip>
               {categoryList.map((category) => (
-                <IonChip color="light" key={category}>
+                <IonChip
+                  color="light"
+                  key={category}
+                  onClick={() => filterCategory(category)}
+                >
                   <IonLabel>{category}</IonLabel>{" "}
                 </IonChip>
               ))}
-            </p>
+
+              <Link to="/my/category">
+                <IonChip color="light">
+                  <div className="ion-text-center">
+                    <IonIcon icon={settings} />
+                  </div>
+                </IonChip>
+              </Link>
+              <p>Click on the gear icon to add/remove category</p>
+            </div>
           </IonCardContent>
         </IonCard>
         <div className="ion-text-center ion-margin-bottom">
@@ -101,7 +129,7 @@ const ViewPage: React.FC = () => {
             className="ion-padding-start ion-padding-end"
             disabled={true}
           >
-            Try to slide the record left or right
+            <IonText>Overall Spent: {formatTime(totalTime)}</IonText>
           </IonButton>
         </div>
         <IonItem lines="none">
@@ -127,7 +155,7 @@ const ViewPage: React.FC = () => {
           </div>
         )}
 
-        {trackList.map((entry) => (
+        {filterTrackList.map((entry) => (
           <IonItemSliding key={entry.id}>
             <IonItem>
               <IonCol>
@@ -169,6 +197,7 @@ const ViewPage: React.FC = () => {
             </IonItemOptions>
           </IonItemSliding>
         ))}
+        <div className="ion-text-end ion-margin-top"></div>
         <IonToast
           isOpen={showDelToast}
           onDidDismiss={() => setDelToast(false)}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   IonButton,
   IonCard,
@@ -6,7 +6,9 @@ import {
   IonHeader,
   IonItem,
   IonLabel,
+  IonModal,
   IonPage,
+  IonText,
   IonTitle,
   IonToggle,
   IonToolbar,
@@ -14,12 +16,19 @@ import {
 import "../theme/components.css";
 import { auth } from "../firebase";
 import { Redirect } from "react-router";
+import { Link } from "react-router-dom";
+import CreditPage from "./creditPage";
 
 const toggleDarkModeHandler = () => {
   document.body.classList.toggle("dark");
 };
 
 const SettingPage: React.FC = () => {
+  const [showCreditModal, setCreditModal] = useState(false);
+  const turnOffCredit = () => {
+    setCreditModal(false);
+  };
+
   const handleLogout = () => {
     auth.signOut();
     return <Redirect to="/login" />;
@@ -53,16 +62,17 @@ const SettingPage: React.FC = () => {
           </IonItem>
 
           <IonItem>
-            <div>
-              <a href="/my/credits">Credits & Others</a>
-            </div>
+            <div onClick={() => setCreditModal(true)}>Credits & Others</div>
           </IonItem>
           <IonItem>
-            <a href="mailto:bdchanbroset@gmail.com">
+            <a href="mailto:chanrose@protonmail.com">
               Found a bug or suggestion?
             </a>
           </IonItem>
-          <IonItem>MFA © 2020</IonItem>
+          <IonItem>
+            <Link to="/my/category"> Add/Remove Category</Link>
+          </IonItem>
+          <IonItem>COR © 2020</IonItem>
         </IonCard>
 
         <IonButton
@@ -73,6 +83,15 @@ const SettingPage: React.FC = () => {
         >
           LOGOUT
         </IonButton>
+        <div className="ion-text-center">
+          <IonText color="medium">Latest update on Jan 19, 2021</IonText>
+        </div>
+        <IonModal
+          isOpen={showCreditModal}
+          onDidDismiss={() => setCreditModal(false)!}
+        >
+          <CreditPage turnOffModal={turnOffCredit} />
+        </IonModal>
       </IonContent>
     </IonPage>
   );

@@ -15,6 +15,7 @@ import SettingPage from "./pages/settingPage";
 import EntryPage from "./pages/entryPage";
 import CreditPage from "./pages/creditPage";
 import { useAuth } from "./auth";
+import CatePage from "./pages/catePage";
 
 const AppTabs: React.FC = () => {
   const { loggedIn } = useAuth();
@@ -29,7 +30,7 @@ const AppTabs: React.FC = () => {
           <Route path="/my/home" component={HomePage} exact={true} />
           <Route path="/my/view" component={ViewPage} exact={true} />
           <Route path="/my/settings" component={SettingPage} />
-
+          <Route path="/my/category" component={CatePage} />
           <Route path="/my/view/entries/:id">
             <EntryPage />
           </Route>

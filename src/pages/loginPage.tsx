@@ -29,6 +29,7 @@ const LoginPage: React.FC = () => {
         userDetail.email,
         userDetail.password
       );
+      return credential;
     } catch (error) {
       setErr(error.message!);
       setStatus({ loading: false, error: true });

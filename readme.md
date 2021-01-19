@@ -4,10 +4,18 @@ My Tracker is an open source app that allow users to track their own productivit
 is their time spending.
 
 ## Update list:
-Latest update on Dec 29, 2020
-- Add PWA supported
-- Fix mins and sec functionality to hr and min
-- Re position the open to the left instead
+Latest update on Jan 19, 2021
+- Add total time spent
+
+## Current Features
+- Start and Stop the time recording
+- Select which category the recording belong to
+- Save / Reset the recording
+- Add / Remove Category
+- Slide left / right of the records to see more detail's category / open / delete
+- Overall time spent
+- Dark mode (for some devices)
+- Report bugs or make suggestion
 
 ## Credits
 - [Canva](https://www.canva.com/) for the favicon
