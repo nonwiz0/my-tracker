@@ -84,7 +84,7 @@ const SettingPage: React.FC = () => {
           LOGOUT
         </IonButton>
         <div className="ion-text-center">
-          <IonText color="medium">Latest update on Jan 07, 2021</IonText>
+          <IonText color="medium">Latest update on Jan 19, 2021</IonText>
         </div>
         <IonModal
           isOpen={showCreditModal}
