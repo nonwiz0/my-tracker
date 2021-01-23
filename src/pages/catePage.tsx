@@ -16,9 +16,8 @@ import {
   IonToast,
   IonToolbar,
 } from "@ionic/react";
-import { CategoryDetail, toEntry, TrackDetail } from "../model";
-import { addCircle, closeCircle, open, trash } from "ionicons/icons";
-import { formatString, formatTime } from "../components/FormatDateTime";
+import { CategoryDetail, toEntry } from "../model";
+import { addCircle, closeCircle } from "ionicons/icons";
 import { firestore } from "../firebase";
 import { useAuth } from "../auth";
 
@@ -41,13 +40,6 @@ const CatePage: React.FC = () => {
     return () => {};
   }, [userId]);
 
-  // const handleDelete = async (keyName: string) => {
-  //   const entryRef = entriesRef.doc(keyName);
-  //   await entryRef.delete().then(() => {
-  //     console.log("deleted");
-  //   });
-  //   setDelToast(true);
-  // };
   const handleRemove = (cateName: string) => {
     console.log("Deleting");
     let temp = categoryList?.filter((cate) => cate !== cateName);

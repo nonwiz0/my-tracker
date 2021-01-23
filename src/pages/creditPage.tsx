@@ -117,7 +117,7 @@ const CreditPage: React.FC<turnOffModal> = ({ turnOffModal }) => {
               <IonCardContent>
                 <IonText>
                   <div className="ion-text-center">
-                    Get started with <br /> gh repo clone chanrose/vls
+                    Get started with <br /> gh repo clone chanrose/my-tracker
                     <br />
                   </div>
                 </IonText>
@@ -141,11 +141,11 @@ const CreditPage: React.FC<turnOffModal> = ({ turnOffModal }) => {
                 <IonText>
                   <div className="ion-text-center">
                     <a href="mailto:chanrose@protonmail.com">
-                      Email: chanrose@protonmail.com
+                      Email: chanrose@pm.me
                     </a>{" "}
                     <br />{" "}
-                    <a href="https://chanrose.vercel.app">
-                      Website: https://chanrose.vercel.app
+                    <a href="https://chanrose.now.sh">
+                      Website: https://chanrose.now.sh
                     </a>
                     <br />
                   </div>

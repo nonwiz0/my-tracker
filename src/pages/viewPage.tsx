@@ -21,7 +21,11 @@ import {
 } from "@ionic/react";
 import { toEntry, TrackDetail } from "../model";
 import { open, reload, settings, trash } from "ionicons/icons";
-import { formatString, formatTime } from "../components/FormatDateTime";
+import {
+  formatDate,
+  formatString,
+  formatTime,
+} from "../components/FormatDateTime";
 import { firestore } from "../firebase";
 import { useAuth } from "../auth";
 import { Link } from "react-router-dom";
@@ -127,7 +131,9 @@ const ViewPage: React.FC = () => {
             color="light"
             expand="block"
             className="ion-padding-start ion-padding-end"
-            disabled={true}
+            onClick={() => {
+              console.log("Your Tracking list: ", filterTrackList);
+            }}
           >
             <IonText>Overall Spent: {formatTime(totalTime)}</IonText>
           </IonButton>
@@ -188,6 +194,7 @@ const ViewPage: React.FC = () => {
               </IonItemOption>
             </IonItemOptions>
             <IonItemOptions side="end">
+              <IonItemOption>{formatDate(entry.date)}</IonItemOption>
               <IonItemOption
                 color="danger"
                 onClick={() => handleDelete(entry.id)}

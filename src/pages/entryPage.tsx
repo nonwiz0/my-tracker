@@ -1,42 +1,52 @@
 import React, { useEffect, useState } from "react";
 import {
   IonBackButton,
+  IonButton,
   IonButtons,
   IonCard,
   IonCardContent,
   IonCol,
   IonContent,
   IonHeader,
+  IonIcon,
   IonLabel,
   IonPage,
   IonRow,
   IonText,
+  IonTextarea,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { useRouteMatch } from "react-router";
+import { useHistory, useRouteMatch } from "react-router";
 import { toEntry, TrackDetail } from "../model";
 import { formatDate, formatDetailTime } from "../components/FormatDateTime";
 import { firestore } from "../firebase";
 import { useAuth } from "../auth";
+import { close, pencil } from "ionicons/icons";
 
 interface RouterParams {
   id: string;
 }
 
 const EntryPage: React.FC = () => {
+  const history = useHistory();
+  const [editing, setEditing] = useState(false);
+  const [description, setDescription] = useState("");
   const { userId } = useAuth();
-  console.log("You're eat entry page");
   const match = useRouteMatch<RouterParams>();
   const { id } = match.params;
   const [trackDetail, setTrackDetail] = useState<TrackDetail>();
+  const entryRef = firestore
+    .collection("users")
+    .doc(userId)
+    .collection("tasks")
+    .doc(id);
 
+  const handleUpdate = async () => {
+    if (description !== undefined) await entryRef.update({ description });
+    history.goBack();
+  };
   const getTrackFS = () => {
-    const entryRef = firestore
-      .collection("users")
-      .doc(userId)
-      .collection("tasks")
-      .doc(id);
     entryRef.get().then((doc) => {
       setTrackDetail(toEntry(doc));
     });
@@ -45,9 +55,8 @@ const EntryPage: React.FC = () => {
   useEffect(() => {
     getTrackFS();
     return () => {};
-  }, [id, userId]);
+  }, [id]);
 
-  console.log(trackDetail);
   return (
     <IonPage>
       <IonHeader>
@@ -58,6 +67,12 @@ const EntryPage: React.FC = () => {
           <IonTitle>
             <div>{trackDetail?.category} </div>
           </IonTitle>
+          <IonButtons slot="end">
+            <IonButton onClick={() => setEditing(!editing)}>
+              {editing && <IonIcon icon={close} />}
+              {!editing && <IonIcon icon={pencil} />}
+            </IonButton>
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding" fullscreen>
@@ -83,7 +98,25 @@ const EntryPage: React.FC = () => {
               <IonLabel>
                 Description: <br />
               </IonLabel>
-              <IonText color="primary">{trackDetail?.description}</IonText>
+              {editing && (
+                <>
+                  <IonTextarea
+                    value={description}
+                    onIonChange={(e) => setDescription(e.detail.value!)}
+                    placeholder={trackDetail?.description}
+                  ></IonTextarea>
+                  <IonButton
+                    onClick={handleUpdate}
+                    className="ion-margin-top"
+                    fill="clear"
+                  >
+                    Update
+                  </IonButton>
+                </>
+              )}
+              {!editing && (
+                <IonText color="primary">{trackDetail?.description}</IonText>
+              )}
             </div>
           </IonCardContent>
         </IonCard>
